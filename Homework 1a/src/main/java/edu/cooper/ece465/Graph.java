@@ -13,8 +13,8 @@ public class Graph {
         List<String> shortPath;
 
         Node() {
-            adjList = new ArrayList<Edge>();
-            shortPath = new ArrayList<String>();
+            adjList = new ArrayList<>();
+            shortPath = new ArrayList<>();
         }
     }
 
@@ -27,8 +27,8 @@ public class Graph {
     private Hashtable<String, Node> encountered;
 
     public Graph() {
-        nodeList = new ArrayList<Node>();
-        encountered = new Hashtable<String, Node>();
+        nodeList = new ArrayList<>();
+        encountered = new Hashtable<>();
     }
 
     public void makeGraph(String inFile) throws Exception {

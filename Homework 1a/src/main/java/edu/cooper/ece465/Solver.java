@@ -5,7 +5,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class Solver implements Runnable {
-
     private Log LOG = LogFactory.getLog(Solver.class);
     private Graph g;
     private String begin;

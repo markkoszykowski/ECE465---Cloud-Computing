@@ -5,7 +5,6 @@ import java.util.*;
 import java.nio.charset.StandardCharsets;
 
 public class Graph {
-
     private List<Node> nodeList;
     private Hashtable<String, Node> encountered;
 

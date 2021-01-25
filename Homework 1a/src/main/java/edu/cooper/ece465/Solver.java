@@ -19,7 +19,7 @@ public class Solver extends Thread {
 
     @Override
     public void run() {
-        LOG.debug("Runner.run() - begin");
+        LOG.debug("Solver.run() - begin");
 
         Node start = this.g.getNode(begin);
         PriorityQueue<Node> minHeap = new PriorityQueue<>(this.g.getSize(), Comparator.comparingInt(n -> n.getDist(number)));
@@ -48,6 +48,6 @@ public class Solver extends Thread {
                 }
             }
         }
-        LOG.debug("Runner.run() - end");
+        LOG.debug("Solver.run() - end");
     }
 }

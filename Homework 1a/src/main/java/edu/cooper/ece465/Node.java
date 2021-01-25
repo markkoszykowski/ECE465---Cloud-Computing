@@ -35,19 +35,11 @@ public class Node {
 
     public List<String> getShortPath(int ind) { return this.shortPath.get(ind); }
 
-    public void setDist(int ind, int val) {
-        this.dist.set(ind, val);
-    }
+    public void setDist(int ind, int val) { this.dist.set(ind, val); }
 
-    public void setKnown(int ind) {
-        this.known.set(ind, true);
-    }
+    public void setKnown(int ind) { this.known.set(ind, true); }
 
-    public void addAdj(Edge e) {
-        this.adjList.add(e);
-    }
+    public void addAdj(Edge e) { this.adjList.add(e); }
 
-    public void setShortPath(int ind, List<String> shortPath) {
-        this.shortPath.set(ind, new ArrayList<>(shortPath));
-    }
+    public void setShortPath(int ind, List<String> shortPath) { this.shortPath.set(ind, new ArrayList<>(shortPath)); }
 }

@@ -1,34 +1,27 @@
 package edu.cooper.ece465;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Graph {
-
-    private class Node {
-        String name;
-        int dist;
-        boolean known;
-        List<Edge> adjList;
-        List<String> shortPath;
-
-        Node() {
-            adjList = new ArrayList<>();
-            shortPath = new ArrayList<>();
-        }
-    }
-
-    private class Edge {
-        Node dest;
-        int cost;
-    }
 
     private List<Node> nodeList;
     private Hashtable<String, Node> encountered;
 
     public Graph() {
-        nodeList = new ArrayList<>();
-        encountered = new Hashtable<>();
+        this.nodeList = new ArrayList<>();
+        this.encountered = new Hashtable<>();
+    }
+
+    public int getSize() { return this.nodeList.size(); }
+
+    public List<Node> getNodeList() {
+        return this.nodeList;
+    }
+
+    public Node getNode(String name) {
+        return this.encountered.get(name);
     }
 
     public void makeGraph(String inFile) throws Exception {
@@ -38,74 +31,71 @@ public class Graph {
         String begin, end, cost;
         Node beginNode, endNode;
         while((begin = br.readLine()) != null && (end = br.readLine()) != null && (cost = br.readLine()) != null) {
-            Node temp1 = new Node();
-            if(!encountered.containsKey(begin)) {
-                temp1.name = begin;
-                temp1.dist = Integer.MAX_VALUE;
-                temp1.known = false;
+            if(!this.encountered.containsKey(begin)) {
+                Node temp = new Node(begin);
 
-                nodeList.add(temp1);
-                encountered.put(begin, temp1);
+                this.nodeList.add(temp);
+                this.encountered.put(begin, temp);
             }
             beginNode = encountered.get(begin);
 
-            Node temp2 = new Node();
-            if(!encountered.containsKey(end)) {
-                temp2.name = end;
-                temp2.dist = Integer.MAX_VALUE;
-                temp2.known = false;
+            if(!this.encountered.containsKey(end)) {
+                Node temp = new Node(end);
 
-                nodeList.add(temp2);
-                encountered.put(end, temp2);
+                this.nodeList.add(temp);
+                this.encountered.put(end, temp);
             }
             endNode = encountered.get(end);
 
-            Edge e = new Edge();
-            e.dest = endNode;
-            e.cost = Integer.parseInt(cost);
-            beginNode.adjList.add(e);
+            Edge e = new Edge(endNode, Integer.parseInt(cost));
+            beginNode.addAdj(e);
         }
         br.close();
+        for(Node n : this.nodeList) {
+            n.setup(this.getSize());
+        }
     }
 
     public void printGraph() {
-        for(Node n : nodeList) {
-            System.out.println("Origin Node Name: " + n.name);
-            for(Edge e : n.adjList) {
-                System.out.println("\tDestination Node Name: " + e.dest.name);
+        for(Node n : this.nodeList) {
+            System.out.println("Origin Node Name: " + n.getName());
+            for(Edge e : n.getAdjList()) {
+                System.out.println("\tDestination Node Name: " + e.getDest().getName());
 
-                System.out.println("\tCost: " + e.cost + "\n");
+                System.out.println("\tCost: " + e.getCost() + "\n");
             }
-            if(n.adjList.isEmpty()) { System.out.println("\tNo Destinations\n"); }
+            if(n.getAdjList().isEmpty()) { System.out.println("\tNo Destinations\n"); }
         }
     }
 
-    public void dijkstra(String vertex) {
-        System.out.println("Doing something?");
-    }
-
-    public boolean checkHash(String vertex) {
-        return encountered.containsKey(vertex);
+    public void distributedDijkstra() {
+        for(int i = 0; i < this.getSize(); i++) {
+            Solver s = new Solver(this, this.nodeList.get(i).getName(), i);
+            s.start();
+        }
     }
 
     public void makeOut(String outFile) throws Exception {
-        PrintWriter shortFile = new PrintWriter(outFile, "UTF-8");
-        for(Node n : nodeList) {
-            shortFile.printf("%s: ", n.name);
+        PrintWriter shortFile = new PrintWriter(outFile, StandardCharsets.UTF_8);
+        for(int i = 0; i < this.getSize(); i++) {
+            shortFile.println("Shortest paths starting from " + this.nodeList.get(i).getName());
+            for (Node n : this.nodeList) {
+                shortFile.printf("%s: ", n.getName());
 
-            if(n.shortPath.isEmpty()) {
-                shortFile.println("NO PATH");
-            }
-            else {
-                shortFile.printf(" [");
-                for(String s : n.shortPath) {
-                    shortFile.printf("%s", s);
-                    if(!n.shortPath.get(n.shortPath.size() - 1).equals(s)) {
-                        shortFile.printf(", ");
+                if (n.getShortPath(i).isEmpty()) {
+                    shortFile.println("NO PATH");
+                } else {
+                    shortFile.printf("%d [", n.getDist(i));
+                    for (String s : n.getShortPath(i)) {
+                        shortFile.printf("%s", s);
+                        if (!n.getShortPath(i).get(n.getShortPath(i).size() - 1).equals(s)) {
+                            shortFile.printf(", ");
+                        }
                     }
+                    shortFile.println("]");
                 }
-                shortFile.println("]");
             }
+            shortFile.println();
         }
         shortFile.close();
     }

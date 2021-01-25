@@ -14,6 +14,7 @@ public class Solver extends Thread {
         this.number = number;
     }
 
+    @Override
     public void run() {
         Node start = this.g.getNode(begin);
         PriorityQueue<Node> minHeap = new PriorityQueue<>(this.g.getSize(), (n1, n2) -> {

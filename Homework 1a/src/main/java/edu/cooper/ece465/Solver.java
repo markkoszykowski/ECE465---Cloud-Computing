@@ -1,9 +1,12 @@
 package edu.cooper.ece465;
 
 import java.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class Solver extends Thread {
 
+    private Log LOG = LogFactory.getLog(Solver.class);
     private Graph g;
     private String begin;
     private int number;
@@ -16,20 +19,15 @@ public class Solver extends Thread {
 
     @Override
     public void run() {
-        Node start = this.g.getNode(begin);
-        PriorityQueue<Node> minHeap = new PriorityQueue<>(this.g.getSize(), (n1, n2) -> {
-            if(n1.getDist(number) < n2.getDist(number)) { return -1; }
-            else if (n1.getDist(number) == n2.getDist(number)) { return 0; }
-            else { return 1; }
+        LOG.debug("Runner.run() - begin");
 
-        });
+        Node start = this.g.getNode(begin);
+        PriorityQueue<Node> minHeap = new PriorityQueue<>(this.g.getSize(), Comparator.comparingInt(n -> n.getDist(number)));
 
         start.setDist(this.number, 0);
         start.getShortPath(this.number).add(this.begin);
 
-        for(Node n : g.getNodeList()) {
-            minHeap.add(n);
-        }
+        minHeap.addAll(this.g.getNodeList());
 
         Node temp;
         while(!minHeap.isEmpty()) {
@@ -50,5 +48,6 @@ public class Solver extends Thread {
                 }
             }
         }
+        LOG.debug("Runner.run() - end");
     }
 }

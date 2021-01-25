@@ -39,7 +39,6 @@ public class Solver implements Runnable {
                     e.getDest().getShortPath(this.number).add(e.getDest().getName());
 
                     e.getDest().setDist(this.number, e.getCost() + temp.getDist(this.number));
-                    this.g.getNode(e.getDest().getName()).setDist(this.number, e.getDest().getDist(this.number));
                     if (!minHeap.isEmpty()) {
                         minHeap.add(minHeap.remove());
                     }

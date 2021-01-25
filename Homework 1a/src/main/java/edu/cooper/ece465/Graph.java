@@ -30,8 +30,8 @@ public class Graph {
 
         String begin, end, cost;
         Node beginNode, endNode;
-        while((begin = br.readLine()) != null && (end = br.readLine()) != null && (cost = br.readLine()) != null) {
-            if(!this.encountered.containsKey(begin)) {
+        while ((begin = br.readLine()) != null && (end = br.readLine()) != null && (cost = br.readLine()) != null) {
+            if (!this.encountered.containsKey(begin)) {
                 Node temp = new Node(begin);
 
                 this.nodeList.add(temp);
@@ -39,7 +39,7 @@ public class Graph {
             }
             beginNode = encountered.get(begin);
 
-            if(!this.encountered.containsKey(end)) {
+            if (!this.encountered.containsKey(end)) {
                 Node temp = new Node(end);
 
                 this.nodeList.add(temp);
@@ -51,33 +51,32 @@ public class Graph {
             beginNode.addAdj(e);
         }
         br.close();
-        for(Node n : this.nodeList) {
+        for (Node n : this.nodeList) {
             n.setup(this.getSize());
         }
     }
 
     public void printGraph() {
-        for(Node n : this.nodeList) {
+        for (Node n : this.nodeList) {
             System.out.println("Origin Node Name: " + n.getName());
-            for(Edge e : n.getAdjList()) {
+            for (Edge e : n.getAdjList()) {
                 System.out.println("\tDestination Node Name: " + e.getDest().getName());
 
                 System.out.println("\tCost: " + e.getCost() + "\n");
             }
-            if(n.getAdjList().isEmpty()) { System.out.println("\tNo Destinations\n"); }
+            if (n.getAdjList().isEmpty()) { System.out.println("\tNo Destinations\n"); }
         }
     }
 
     public void distributedDijkstra() {
-        for(int i = 0; i < this.getSize(); i++) {
-            Solver s = new Solver(this, this.nodeList.get(i).getName(), i);
-            s.start();
+        for (int i = 0; i < this.getSize(); i++) {
+            new Thread(new Solver(this, this.nodeList.get(i).getName(), i)).start();
         }
     }
 
     public void makeOut(String outFile) throws Exception {
         PrintWriter shortFile = new PrintWriter(outFile, StandardCharsets.UTF_8);
-        for(int i = 0; i < this.getSize(); i++) {
+        for (int i = 0; i < this.getSize(); i++) {
             shortFile.println("Shortest paths starting from " + this.nodeList.get(i).getName());
             for (Node n : this.nodeList) {
                 shortFile.printf("%s: ", n.getName());

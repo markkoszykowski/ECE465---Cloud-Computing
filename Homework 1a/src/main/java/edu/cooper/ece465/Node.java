@@ -18,7 +18,7 @@ public class Node {
     }
 
     public void setup(int size) {
-        for(int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             this.dist.add(Integer.MAX_VALUE);
             this.known.add(false);
             this.shortPath.add(new ArrayList<>());

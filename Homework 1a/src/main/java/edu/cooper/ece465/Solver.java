@@ -21,8 +21,8 @@ public class Solver extends Thread {
     public void run() {
         LOG.debug("Solver.run() - begin");
 
-        Node start = this.g.getNode(begin);
-        PriorityQueue<Node> minHeap = new PriorityQueue<>(this.g.getSize(), Comparator.comparingInt(n -> n.getDist(number)));
+        Node start = this.g.getNode(this.begin);
+        PriorityQueue<Node> minHeap = new PriorityQueue<>(this.g.getSize(), Comparator.comparingInt(n -> n.getDist(this.number)));
 
         start.setDist(this.number, 0);
         start.getShortPath(this.number).add(this.begin);

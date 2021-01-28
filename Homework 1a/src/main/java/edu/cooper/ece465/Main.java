@@ -15,7 +15,11 @@ public class Main {
 
         g.printGraph();
 
+        long startTime = System.nanoTime();
         g.distributedDijkstra();
+        long endTime = System.nanoTime();
+
+        System.out.println("Execution time in milliseconds: " + (endTime - startTime)/1000000 + "\n");
 
         System.out.println("Enter name of output file: ");
         outFile = in.nextLine();

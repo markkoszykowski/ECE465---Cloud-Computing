@@ -49,7 +49,5 @@ public class Main {
         endTime = System.nanoTime();
 
         System.out.println("Sequential Execution time in milliseconds: " + (endTime - startTime)/1000000 + "\n");
-
-
     }
 }

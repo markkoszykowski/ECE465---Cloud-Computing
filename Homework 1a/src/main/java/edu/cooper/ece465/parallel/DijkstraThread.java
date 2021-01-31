@@ -1,6 +1,5 @@
 package edu.cooper.ece465.parallel;
 
-
 import edu.cooper.ece465.model.Edge;
 import edu.cooper.ece465.model.Graph;
 import edu.cooper.ece465.model.Node;
@@ -22,14 +21,14 @@ public class DijkstraThread implements Runnable {
     @Override
     public void run() {
         Node start = this.graph.getNode(this.begin);
-        PriorityQueue<Node> minHeap = new PriorityQueue<Node>(this.graph.getSize(), Comparator.comparingInt(n -> n.getDist(this.number)));
+        PriorityQueue<Node> minHeap = new PriorityQueue<>(this.graph.getSize(), Comparator.comparingInt(n -> n.getDist(this.number)));
 
         start.setDist(this.number, 0);
         start.getShortPath(this.number).add(this.begin);
 
         minHeap.addAll(this.graph.getNodeList());
 
-        Node temp = null;
+        Node temp;
         while (!minHeap.isEmpty()) {
             temp = minHeap.remove();
             temp.setKnown(this.number);

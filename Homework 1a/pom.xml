@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.example</groupId>
-    <artifactId>cc_hw1a</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>ece465_hw1a</artifactId>
+    <version>1.0a-SNAPSHOT</version>
 
 </project>

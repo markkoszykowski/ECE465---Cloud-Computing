@@ -10,7 +10,7 @@ public class Graph {
     private Hashtable<String, Node> encountered;
 
     public Graph() {
-        this.nodeList = new ArrayList<Node>();
+        this.nodeList = new ArrayList<>();
         this.encountered = new Hashtable<>();
     }
 
@@ -71,8 +71,8 @@ public class Graph {
     public void generateRandomGraph(int numNodes, int edgesPerNode, int maxCost) {
         String name;
         Node node;
-        for (int i=1; i<=numNodes; i++) {
-            name = "v" + String.valueOf(i);
+        for (int i=1; i <= numNodes; i++) {
+            name = "v" + i;
             node = new Node(name);
             this.nodeList.add(node);
             this.encountered.put(name, node);
@@ -81,7 +81,7 @@ public class Graph {
         Node endNode;
         for (Node n : this.nodeList) {
             for (int j = 0; j < edgesPerNode; j++) {
-                endNode = this.encountered.get("v" + String.valueOf(ThreadLocalRandom.current().nextInt(1, numNodes+1)));
+                endNode = this.encountered.get("v" + ThreadLocalRandom.current().nextInt(1, numNodes+1));
                 Edge edge = new Edge(endNode, ThreadLocalRandom.current().nextInt(1, maxCost+1));
                 n.addAdj(edge);
             }
@@ -120,5 +120,4 @@ public class Graph {
             n.setup(this.getSize());
         }
     }
-
 }

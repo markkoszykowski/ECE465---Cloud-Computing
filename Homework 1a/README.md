@@ -21,5 +21,9 @@ At this point, a 'target' folder should have been created. To execute the compil
 
     java -cp . edu.cooper.ece465.Main
 
-## References
+## Authors
 
+ - Mark Koszykowski
+ - Omar Thenmalai
+
+## References

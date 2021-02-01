@@ -35,3 +35,5 @@ At this point, a 'target' folder should have been created. To execute the compil
  - Omar Thenmalai
 
 ## References
+
+[Shortest Path Algorithms](https://web.stanford.edu/class/cs97si/07-shortest-path-algorithms.pdf)

@@ -8,4 +8,8 @@
     <artifactId>ece465_hw1a</artifactId>
     <version>1.0a-SNAPSHOT</version>
 
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
 </project>

@@ -26,8 +26,8 @@ public class Main {
             break;
         }
 
-        g1.generateRandomGraph(1000, 100, 20);
-        g2.generateRandomGraph(1000, 100, 20);
+        g1.generateRandomGraph(1000, 10, 20);
+        g2.generateRandomGraph(1000, 10, 20);
 
         DijkstraParallel dijkstraParallel = new DijkstraParallel();
         DijkstraSequential dijkstraSequential = new DijkstraSequential();

@@ -21,6 +21,14 @@ At this point, a 'target' folder should have been created. To execute the compil
 
     java -cp . edu.cooper.ece465.Main
 
+## Tests
+
+| # of Vertices | Min. Edges Per Node | Single Thread | 4 Threads |
+|------------|------------|-------------|-------------|
+| 100 | 5 | 24 ms | 19 ms |
+| 1000 | 10 | 7891 ms | 2551 ms |
+
+
 ## Authors
 
  - Mark Koszykowski

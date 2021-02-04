@@ -1,3 +1,6 @@
+*.class
+
 .idea
 Homework 1b.iml
 out
+target

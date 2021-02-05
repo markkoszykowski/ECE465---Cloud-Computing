@@ -19,7 +19,7 @@ Once you have cloned the Git repository, simply enter the root and run
 
 At this point, a 'target' folder should have been created. To execute the compiled code, enter the 'target' folder and run
 
-    java -jar ece465_hw1b-1.2b.jar
+    java -jar ece465_hw1b-v1.2.jar
 
 ## Tests
 

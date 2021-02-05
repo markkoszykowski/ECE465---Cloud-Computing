@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        String inFile, outFile;
         int numThreads;
 
         Graph g1 = new Graph(); // For parallel
@@ -18,7 +17,7 @@ public class Main {
         while(true) {
             System.out.println("Number of Threads: ");
             try {
-                numThreads = Integer.parseInt(in.next());
+                numThreads = Integer.parseInt(in.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Number of Threads must be an integer!");
                 continue;
@@ -32,22 +31,32 @@ public class Main {
         DijkstraParallel dijkstraParallel = new DijkstraParallel();
         DijkstraSequential dijkstraSequential = new DijkstraSequential();
 
-//        System.out.println("Enter name of output file: ");
-//        outFile = in.nextLine();
-//        g1.makeOut(outFile);
-
-
         long startTime = System.nanoTime();
         dijkstraParallel.solveAllPairsShortestPath(g1, numThreads);
         long endTime = System.nanoTime();
         System.out.println("Parallel Execution time in milliseconds: " + (endTime - startTime)/1000000 + "\n");
-
-//        g1.initializeGraph();
 
         startTime = System.nanoTime();
         dijkstraSequential.solveAllPairsShortestPath(g2);
         endTime = System.nanoTime();
 
         System.out.println("Sequential Execution time in milliseconds: " + (endTime - startTime)/1000000 + "\n");
+
+        // Code to solve specific graph from file
+
+        /*
+        Graph g3 = new Graph(); // For file
+        String inFile, outFile;
+
+        System.out.println("Enter name of input file: ");
+        inFile = in.nextLine();
+        g3.makeGraph(inFile);
+
+        dijkstraParallel.solveAllPairsShortestPath(g3, numThreads);
+
+        System.out.println("Enter name of output file: ");
+        outFile = in.nextLine();
+        g3.makeOut(outFile);
+         */
     }
 }

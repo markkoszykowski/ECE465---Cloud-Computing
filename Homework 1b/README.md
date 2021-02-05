@@ -8,21 +8,84 @@ instance of the SSSP problem.
 Done sequentially, the algorithm has a complexity of O(|V|<sup>3</sup>). Done in parallel, the complexity is reduced by a factor of p, where p is the number of threads.
 The new complexity is therefore O(|V|<sup>3</sup>/p).
 
-## Usage
+## Example
 
-Once you have cloned the Git repository, simply enter the root and run
+![](graph.png)
 
-    sh ./build.sh
+Input file:
 
-At this point, a 'target' folder should have been created. To execute the compiled code, enter the 'target' folder and run
+    v1
+    v2
+    2
+    v1
+    v4
+    1
+    ...
 
-    java -jar ece465_hw1b-v1.2.jar
+Output File:
 
-## Removal
+    Shortest paths starting from v1
+    v1: 0 [v1]
+    v2: 2 [v1, v2]
+    v4: 1 [v1, v4]
+    v5: 3 [v1, v4, v5]
+    v3: 3 [v1, v4, v3]
+    v6: 6 [v1, v4, v7, v6]
+    v7: 5 [v1, v4, v7]
+    
+    Shortest paths starting from v2
+    v1: 9 [v2, v4, v3, v1]
+    v2: 0 [v2]
+    v4: 3 [v2, v4]
+    v5: 5 [v2, v4, v5]
+    v3: 5 [v2, v4, v3]
+    v6: 8 [v2, v4, v7, v6]
+    v7: 7 [v2, v4, v7]
 
-To remove the compiled code, simply enter the root and run 
+    Shortest paths starting from v4
+    v1: 6 [v4, v3, v1]
+    v2: 8 [v4, v3, v1, v2]
+    v4: 0 [v4]
+    v5: 2 [v4, v5]
+    v3: 2 [v4, v3]
+    v6: 5 [v4, v7, v6]
+    v7: 4 [v4, v7]
+    
+    Shortest paths starting from v5
+    v1: NO PATH
+    v2: NO PATH
+    v4: NO PATH
+    v5: 0 [v5]
+    v3: NO PATH
+    v6: 7 [v5, v7, v6]
+    v7: 6 [v5, v7]
+    
+    Shortest paths starting from v3
+    v1: 4 [v3, v1]
+    v2: 6 [v3, v1, v2]
+    v4: 5 [v3, v1, v4]
+    v5: 7 [v3, v1, v4, v5]
+    v3: 0 [v3]
+    v6: 5 [v3, v6]
+    v7: 9 [v3, v1, v4, v7]
+    
+    Shortest paths starting from v6
+    v1: NO PATH
+    v2: NO PATH
+    v4: NO PATH
+    v5: NO PATH
+    v3: NO PATH
+    v6: 0 [v6]
+    v7: NO PATH
 
-    sh ./clean.sh
+    Shortest paths starting from v7
+    v1: NO PATH
+    v2: NO PATH
+    v4: NO PATH
+    v5: NO PATH
+    v3: NO PATH
+    v6: 1 [v7, v6]
+    v7: 0 [v7]
 
 ## Tests
 
@@ -36,6 +99,22 @@ To remove the compiled code, simply enter the root and run
  - Improved tooling -> added building and cleaning scripts
  - Added executable .jar file to build routine that compiles with dependencies
  - Added logging
+
+## Usage
+
+Once you have cloned the Git repository, simply enter the root and run
+
+    sh ./build.sh
+
+At this point, a 'target' folder should have been created. To execute the compiled code, enter the 'target' folder and run
+
+    java -jar ece465_hw1b-v1.2.jar
+
+## Removal
+
+To remove the compiled code, simply enter the root and run
+
+    sh ./clean.sh
 
 ## Authors
 

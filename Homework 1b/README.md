@@ -15,11 +15,17 @@ Using a randomly generated graph with 1000 nodes and at least 10 edges per node,
 
 Once you have cloned the Git repository, simply enter the root and run
 
-    mvn clean install
+    sh ./build.sh
 
 At this point, a 'target' folder should have been created. To execute the compiled code, enter the 'target' folder and run
 
     java -jar ece465_hw1b-v1.2.jar
+
+## Removal
+
+To remove the compiled code, simply enter the root and run 
+
+    sh ./clean.sh
 
 ## Tests
 

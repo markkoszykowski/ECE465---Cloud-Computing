@@ -17,9 +17,9 @@ Once you have cloned the Git repository, simply enter the root and run
 
     mvn clean install
 
-At this point, a 'target' folder should have been created. To execute the compiled code, enter the 'target\classes' folder and run
+At this point, a 'target' folder should have been created. To execute the compiled code, enter the 'target' folder and run
 
-    java -cp . edu.cooper.ece465.Main
+    java -jar ece465_hw1b-1.2b.jar
 
 ## Tests
 
@@ -28,6 +28,11 @@ At this point, a 'target' folder should have been created. To execute the compil
 | 100 | 5 | 24 ms | 19 ms |
 | 1000 | 10 | 7891 ms | 2551 ms |
 
+## v1.2 (1b) Updates
+
+ - Improved tooling -> (tentatively) added building and cleaning scripts
+ - Added executable .jar file to build routine
+ - Tentatively added logging
 
 ## Authors
 

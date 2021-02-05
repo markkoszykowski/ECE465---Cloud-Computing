@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # First ensure dependencies loaded since .m2 may be empty
-echo "Checking APP dependencies"
+echo "Checking APP dependencies..."
 mvn dependency:tree
 mvn help:evaluate -Dexpression=project.version
+echo "Done."
 
 # Clean repo from builds
 ./clean.sh

@@ -33,8 +33,8 @@ To remove the compiled code, simply enter the root and run
 
 ## v1.2 (1b) Updates
 
- - Improved tooling -> (tentatively) added building and cleaning scripts
- - Added executable .jar file to build routine
+ - Improved tooling -> added building and cleaning scripts
+ - Added executable .jar file to build routine that compiles with dependencies
  - Tentatively added logging
 
 ## Authors

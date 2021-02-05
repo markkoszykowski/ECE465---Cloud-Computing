@@ -6,11 +6,13 @@ import edu.cooper.ece465.model.Node;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import org.apache.log4j.Logger;
 
 public class DijkstraThread implements Runnable {
     private Graph graph;
     private String begin;
     private int number;
+    private static final Logger LOG = Logger.getLogger(DijkstraThread.class);
 
     public DijkstraThread(Graph g, String begin, int number) {
         this.graph = g;
@@ -20,6 +22,7 @@ public class DijkstraThread implements Runnable {
 
     @Override
     public void run() {
+        LOG.debug("DijkstraThread.run() " + this.number + " - begin");
         Node start = this.graph.getNode(this.begin);
         PriorityQueue<Node> minHeap = new PriorityQueue<>(this.graph.getSize(), Comparator.comparingInt(n -> n.getDist(this.number)));
 
@@ -46,5 +49,6 @@ public class DijkstraThread implements Runnable {
                 }
             }
         }
+        LOG.debug("DijkstraThread.run() " + this.number + " - end");
     }
 }

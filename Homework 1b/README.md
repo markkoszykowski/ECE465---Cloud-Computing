@@ -35,7 +35,7 @@ To remove the compiled code, simply enter the root and run
 
  - Improved tooling -> added building and cleaning scripts
  - Added executable .jar file to build routine that compiles with dependencies
- - Tentatively added logging
+ - Added logging
 
 ## Authors
 

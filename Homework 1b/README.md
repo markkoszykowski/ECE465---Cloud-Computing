@@ -22,7 +22,7 @@ Input file:
     1
     ...
 
-Output File:
+Output file:
 
     Shortest paths starting from v1
     v1: 0 [v1]

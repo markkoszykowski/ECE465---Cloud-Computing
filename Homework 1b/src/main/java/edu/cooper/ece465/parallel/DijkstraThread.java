@@ -6,13 +6,14 @@ import edu.cooper.ece465.model.Node;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 public class DijkstraThread implements Runnable {
     private Graph graph;
     private String begin;
     private int number;
-    private static final Logger LOG = Logger.getLogger(DijkstraThread.class);
+    private static final Logger LOG = LogManager.getLogger(DijkstraThread.class);
 
     public DijkstraThread(Graph g, String begin, int number) {
         this.graph = g;

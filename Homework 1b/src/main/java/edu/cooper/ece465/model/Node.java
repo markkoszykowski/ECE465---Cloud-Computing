@@ -1,6 +1,7 @@
 package edu.cooper.ece465.model;
 
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Node {
     private String name;
@@ -21,7 +22,6 @@ public class Node {
         for (int i = 0; i < size; i++) {
             this.dist.add(Integer.MAX_VALUE);
             this.known.add(false);
-//            this.shortPath.clear();
             this.shortPath.add(new ArrayList<>());
         }
     }

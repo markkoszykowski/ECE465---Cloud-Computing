@@ -1,7 +1,7 @@
 package edu.cooper.ece465.sequential;
 
-import edu.cooper.ece465.model.Edge;
 import edu.cooper.ece465.model.Node;
+import edu.cooper.ece465.model.Edge;
 import edu.cooper.ece465.model.Graph;
 
 import java.util.Comparator;

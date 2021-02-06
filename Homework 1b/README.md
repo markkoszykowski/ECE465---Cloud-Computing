@@ -10,6 +10,8 @@ The new complexity is therefore O(|V|<sup>3</sup>/p).
 
 ## Example
 
+Graph:
+
 ![](graph.png)
 
 Input file:
@@ -123,4 +125,5 @@ To remove the compiled code, simply enter the root and run
 
 ## References
 
-[Shortest Path Algorithms](https://web.stanford.edu/class/cs97si/07-shortest-path-algorithms.pdf)
+ - [Shortest Path Algorithms](https://web.stanford.edu/class/cs97si/07-shortest-path-algorithms.pdf)
+ - [Log4j2 Logging](https://dzone.com/articles/log4j-2-configuration-using-properties-file)

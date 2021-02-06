@@ -1,8 +1,8 @@
 package edu.cooper.ece465.parallel;
 
+import edu.cooper.ece465.model.Node;
 import edu.cooper.ece465.model.Edge;
 import edu.cooper.ece465.model.Graph;
-import edu.cooper.ece465.model.Node;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
@@ -23,7 +23,7 @@ public class DijkstraThread implements Runnable {
 
     @Override
     public void run() {
-        LOG.debug("DijkstraThread.run() " + this.number + " - begin");
+        this.LOG.debug("DijkstraThread.run() " + this.number + " - begin");
         Node start = this.graph.getNode(this.begin);
         PriorityQueue<Node> minHeap = new PriorityQueue<>(this.graph.getSize(), Comparator.comparingInt(n -> n.getDist(this.number)));
 
@@ -50,6 +50,6 @@ public class DijkstraThread implements Runnable {
                 }
             }
         }
-        LOG.debug("DijkstraThread.run() " + this.number + " - end");
+        this.LOG.debug("DijkstraThread.run() " + this.number + " - end");
     }
 }

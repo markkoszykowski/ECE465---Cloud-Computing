@@ -39,8 +39,7 @@ public class Main {
         startTime = System.nanoTime();
         dijkstraSequential.solveAllPairsShortestPath(g2);
         endTime = System.nanoTime();
-
-        System.out.println("Sequential Execution time in milliseconds: " + (endTime - startTime)/1000000 + "\n");
+        System.out.println("Sequential Execution time in milliseconds: " + (endTime - startTime)/1000000);
 
         // Code to solve specific graph from file
 
@@ -51,6 +50,8 @@ public class Main {
         System.out.println("Enter name of input file: ");
         inFile = in.nextLine();
         g3.makeGraph(inFile);
+
+        g3.printGraph();
 
         dijkstraParallel.solveAllPairsShortestPath(g3, numThreads);
 

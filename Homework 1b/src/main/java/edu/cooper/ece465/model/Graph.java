@@ -1,7 +1,12 @@
 package edu.cooper.ece465.model;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.Hashtable;
+import java.util.ArrayList;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -22,6 +27,12 @@ public class Graph {
 
     public Node getNode(String name) {
         return this.encountered.get(name);
+    }
+
+    public void initializeGraph() {
+        for (Node n : this.nodeList) {
+            n.setup(this.getSize());
+        }
     }
 
     public void makeGraph(String inFile) throws Exception {
@@ -52,7 +63,7 @@ public class Graph {
         }
         br.close();
 
-        initializeGraph();
+        this.initializeGraph();
     }
 
     public void printGraph() {
@@ -67,11 +78,10 @@ public class Graph {
         }
     }
 
-
     public void generateRandomGraph(int numNodes, int edgesPerNode, int maxCost) {
         String name;
         Node node;
-        for (int i=1; i <= numNodes; i++) {
+        for (int i = 1; i <= numNodes; i++) {
             name = "v" + i;
             node = new Node(name);
             this.nodeList.add(node);
@@ -87,7 +97,7 @@ public class Graph {
             }
         }
 
-        initializeGraph();
+        this.initializeGraph();
     }
 
     public void makeOut(String outFile) throws Exception {
@@ -113,11 +123,5 @@ public class Graph {
             shortFile.println();
         }
         shortFile.close();
-    }
-
-    public void initializeGraph() {
-        for (Node n : this.nodeList) {
-            n.setup(this.getSize());
-        }
     }
 }

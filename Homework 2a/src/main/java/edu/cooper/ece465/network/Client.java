@@ -2,7 +2,6 @@ package edu.cooper.ece465.network;
 
 import edu.cooper.ece465.model.Graph;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -36,7 +35,7 @@ public class Client implements Runnable {
 
             this.oos.close();
             this.ois.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

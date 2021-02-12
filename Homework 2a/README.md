@@ -1,7 +1,7 @@
-# Single-Node Multi-Threaded Dijkstra's Algorithm for solving All Pairs Shortest Path
+# Single-Node Multi-Node, Multi-Threaded Dijkstra's Algorithm for solving All Pairs Shortest Path
 
 The implementation uses simulated nodes to concurrently execute multiple instances of the Single Source Shortest Path version of Dijkstra's algorithm. The current implementation
-assumes that the number of nodes is approximately equal to the number of vertices in the graph. Therefore, each node handles a single execution of Dijkstra's SSSP algorithm.
+assumes that the number of nodes is less than the number of vertices in the graph. Therefore, each node handles multiple concurrent (multi-threaded) executions of Dijkstra's SSSP algorithm.
 Future implementations will handle the instance where the number of processors exceeds the number of vertices, requiring multiple processors to work simultaneously on a given
 instance of the SSSP problem.
 
@@ -91,28 +91,34 @@ Output file:
 
 ## Tests
 
+### TODO
+
 | # of Vertices | Min. Edges Per Graph Node | 4 Threads |
-|------------|------------|-------------|-------------|
-| 100 | 5 | 24 ms | 19 ms |
-| 1000 | 10 | 7891 ms | 2551 ms |
+|---------------|---------------------------|-----------|
+| 100 | 5 | 24 ms |
+| 1000 | 10 | 7891 ms |
 
 ## v2.1 (2a) Updates
 
- - Improved tooling -> added building and cleaning scripts
- - Added executable .jar file to build routine that compiles with dependencies
- - Added logging
+### TODO
 
 ## Usage
 
-#TODO
+### TODO
 
 Once you have cloned the Git repository, simply enter the root and run
 
     sh ./build.sh
 
-At this point, a 'target' folder should have been created. To execute the compiled code, enter the 'target' folder and run
+At this point, a 'target' folder should have been created. To simulate the distributed system, enter the 'target' folder and run
 
-    java -jar ece465_hw1b-v1.2.jar
+    java -cp ece465_hw2a-v2.1.jar edu.cooper.ece465.network.Server
+
+to get the Server end running. Additionally, Client end simulation can be run by then executing 
+    
+    java -cp ece465_hw2a-v2.1.jar edu.cooper.ece465.network.Clients
+
+Note: Please ensure the Server-end is run FIRST, otherwise provided code will not execute.
 
 ## Removal
 

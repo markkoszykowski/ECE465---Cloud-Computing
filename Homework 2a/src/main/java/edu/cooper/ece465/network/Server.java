@@ -11,8 +11,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Server {
-    private static final ArrayList<ObjectInputStream> ois = new ArrayList<>();
-    private static final ArrayList<ObjectOutputStream> oos = new ArrayList<>();
     private static final Scanner in = new Scanner(System.in);
     private static final Logger LOG = LogManager.getLogger(Server.class);
 
@@ -29,26 +27,33 @@ public class Server {
         File portsFile = new File(in.next());
         BufferedReader br = new BufferedReader(new FileReader(portsFile));
 
+        ArrayList<ObjectInputStream> ois = new ArrayList<>();
+        ArrayList<ObjectOutputStream> oos = new ArrayList<>();
+
         String port;
         int i = 0;
         while ((port = br.readLine()) != null) {
-            try (ServerSocket serverSocket = new ServerSocket(Integer.parseInt(port))) {
+            try(ServerSocket serverSocket = new ServerSocket(Integer.parseInt(port))) {
                 System.out.println("Listening to port: " + Integer.parseInt(port));
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Connected to " + clientSocket);
 
-                ois.set(i, new ObjectInputStream(clientSocket.getInputStream()));
-                oos.set(i, new ObjectOutputStream(clientSocket.getOutputStream()));
+                ois.add(new ObjectInputStream(clientSocket.getInputStream()));
+                oos.add(new ObjectOutputStream(clientSocket.getOutputStream()));
 
-                // Do shit here (send graph and receive graph)
-
-                ois.get(i).close();
-                oos.get(i).close();
-                clientSocket.close();
                 i += 1;
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        for (int j = 0; j < i; j++) {
+            System.out.println(ois.get(j).readObject());
+        }
+
+        for (int j = 0; j < i; j++) {
+            ois.get(j).close();
+            oos.get(j).close();
         }
 
         LOG.debug("Server.main() ended");

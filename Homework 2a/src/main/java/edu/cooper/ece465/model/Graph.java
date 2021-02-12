@@ -1,16 +1,17 @@
 package edu.cooper.ece465.model;
 
-import java.io.File;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Hashtable;
 import java.util.ArrayList;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ThreadLocalRandom;
+import java.nio.charset.StandardCharsets;
 
-public class Graph {
+public class Graph implements Serializable {
     public List<Node> nodeList;
     private Hashtable<String, Node> encountered;
 

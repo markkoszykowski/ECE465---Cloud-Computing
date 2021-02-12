@@ -89,24 +89,24 @@ Output file:
     v6: 1 [v7, v6]
     v7: 0 [v7]
 
-## Tests
+## v1.2 (1b) Tests
 
-### TODO
+| # of Vertices | Min. Edges Per Node | Single Thread | 4 Threads |
+|------------|------------|-------------|-------------|
+| 100 | 5 | 24 ms | 19 ms |
+| 1000 | 10 | 7891 ms | 2551 ms |
 
-| # of Vertices | Min. Edges Per Graph Node | 4 Threads |
-|---------------|---------------------------|-----------|
-| 100 | 5 | 24 ms |
-| 1000 | 10 | 7891 ms |
+*v2.1 Tests skipped due to massive overhead of simulating network on a local machine.*
 
 ## v2.1 (2a) Updates
 
-### TODO
+ - Implemented a Multi-Node, Multi-Threaded SSSP version of Dijsktra's Algorithm
+ - Created Server and Client programs to simulate distributed cloud network
+ - Client Spawner spawns multiple Sockets to the localhost across multiple ports to simulate unique IP address requests
 
 ## Usage
 
-### TODO
-
-Once you have cloned the Git repository, simply enter the root and run
+Once the Git repository has been cloned, simply enter the root and run
 
     sh ./build.sh
 
@@ -114,11 +114,14 @@ At this point, a 'target' folder should have been created. To simulate the distr
 
     java -cp ece465_hw2a-v2.1.jar edu.cooper.ece465.network.Server
 
-to get the Server end running. Additionally, Client end simulation can be run by then executing 
+to get the Server end running. Then, run 
     
     java -cp ece465_hw2a-v2.1.jar edu.cooper.ece465.network.Clients
 
-Note: Please ensure the Server-end is run FIRST, otherwise provided code will not execute.
+in a separate terminal session to get the Client end running. At runtime, the user will be asked for (relative paths to) IP Address and Graph files. Examples of
+both have been provided.
+
+Note: Please ensure the Server-end is run FIRST, otherwise provided code will not execute properly.
 
 ## Removal
 

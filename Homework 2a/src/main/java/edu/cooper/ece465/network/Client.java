@@ -4,19 +4,24 @@ import edu.cooper.ece465.model.Graph;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 
+import edu.cooper.ece465.threading.DijkstraParallel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Client implements Runnable {
+    public int NUM_THREADS = 4;
+
     private final int port;
-    private Graph graph;
+    private final InetAddress ip;
     private ObjectInputStream ois = null;
     private ObjectOutputStream oos = null;
     private static final Logger LOG = LogManager.getLogger(Client.class);
 
-    public Client(int p) {
+    public Client(String ip, int p) throws Exception {
+        this.ip = InetAddress.getByName(ip);
         this.port = p;
     }
 
@@ -24,14 +29,16 @@ public class Client implements Runnable {
     public void run() {
         LOG.debug("Client.run() started");
 
-        try (Socket socket = new Socket("localhost", this.port)) {
+        try (Socket socket = new Socket(this.ip, this.port)) {
             this.oos = new ObjectOutputStream(socket.getOutputStream());
             this.ois = new ObjectInputStream(socket.getInputStream());
 
-            // Do shit here (get graph, nodes to calculate, & send back to server)
+            Package p = (Package) this.ois.readObject();
+            Graph graph = p.getGraph();
+            DijkstraParallel dijkstraParallel = new DijkstraParallel();
+            dijkstraParallel.solveShortestPaths(graph, this.NUM_THREADS, p.getStart(), p.getEnd());
 
-            this.oos.writeObject("hello " + this.port);
-            //this.oos.flush();
+            this.oos.writeObject(p);
 
             this.oos.close();
             this.ois.close();

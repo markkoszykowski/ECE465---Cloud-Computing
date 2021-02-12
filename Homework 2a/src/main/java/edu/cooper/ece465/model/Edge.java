@@ -1,8 +1,10 @@
 package edu.cooper.ece465.model;
 
-public class Edge {
-    private Node dest;
-    private int cost;
+import java.io.Serializable;
+
+public class Edge implements Serializable {
+    private final Node dest;
+    private final int cost;
 
     public Edge(Node dest, int cost) {
         this.dest = dest;

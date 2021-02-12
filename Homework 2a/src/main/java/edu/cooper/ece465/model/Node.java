@@ -1,9 +1,10 @@
 package edu.cooper.ece465.model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Node {
+public class Node implements Serializable {
     private String name;
     private List<Integer> dist;
     private List<Boolean> known;

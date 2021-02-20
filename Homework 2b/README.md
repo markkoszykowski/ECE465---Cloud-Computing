@@ -100,7 +100,8 @@ Output file:
 
 ## v2.2 (2b) Updates
 
-### TODO
+Refactored the code and changed file names to be more representative of their actual function. Added a Configuration class that reads from a
+config JSON file allowing for easy change of important parameters like the number of nodes, number of threads per node, and graph size.
 
 ## Usage
 

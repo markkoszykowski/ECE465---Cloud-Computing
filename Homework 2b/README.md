@@ -110,14 +110,14 @@ Once the Git repository has been cloned, simply enter the root and run
 
 At this point, a 'target' folder should have been created. To simulate the distributed system, enter the 'target' folder and run
 
-    java -cp ece465_hw2a-v2.1.jar edu.cooper.ece465.network.Coordinator
+    java -cp ece465_hw2b-v2.1.jar edu.cooper.ece465.network.Coordinator
 
 to get the Server end running. Then, run 
     
-    java -cp ece465_hw2a-v2.1.jar edu.cooper.ece465.network.Workers
+    java -cp ece465_hw2b-v2.2.jar edu.cooper.ece465.network.Workers
 
-in a separate terminal session to get the Client end running. At runtime, the user will be asked for (relative paths to) IP Address and Graph files. Examples of
-both have been provided.
+
+Changes to the graphs specifications, the number of locally simulated nodes, and the number of threads per node can be made in the config.json file.
 
 Note: Please ensure the Server-end is run FIRST, otherwise provided code will not execute properly.
 

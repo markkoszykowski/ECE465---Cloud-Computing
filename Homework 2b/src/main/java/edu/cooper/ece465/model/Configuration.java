@@ -13,6 +13,7 @@ public class Configuration {
     private final String configFile;
 
     private int numThreads;
+    private String inputFile;
     private String outputFile;
     private ArrayList<String> sockets;
     private int numVertices;
@@ -30,6 +31,7 @@ public class Configuration {
         JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
 
         setNumThreads(((Long) jsonObject.get("numThreads")).intValue());
+        setInputFile((String) jsonObject.get("inputFile"));
         setOutputFile((String) jsonObject.get("outputFile"));
         setSockets((JSONArray) jsonObject.get("sockets"));
         setNumVertices(((Long) jsonObject.get("numVertices")).intValue());
@@ -40,15 +42,19 @@ public class Configuration {
 
 
     public int getNumThreads() {
-        return numThreads;
+        return this.numThreads;
     }
 
     public void setNumThreads(int numThreads) {
         this.numThreads = numThreads;
     }
 
+    public String getInputFile() { return this.inputFile; }
+
+    public void setInputFile(String inputFile) { this.inputFile = inputFile; }
+
     public String getOutputFile() {
-        return outputFile;
+        return this.outputFile;
     }
 
     public void setOutputFile(String outputFile) {
@@ -56,7 +62,7 @@ public class Configuration {
     }
 
     public ArrayList<String> getSockets() {
-        return sockets;
+        return this.sockets;
     }
 
     public void setSockets(JSONArray sockets) {
@@ -67,7 +73,7 @@ public class Configuration {
     }
 
     public int getNumVertices() {
-        return numVertices;
+        return this.numVertices;
     }
 
     public void setNumVertices(int numVertices) {
@@ -75,7 +81,7 @@ public class Configuration {
     }
 
     public int getMinEdgesPerVertex() {
-        return minEdgesPerVertex;
+        return this.minEdgesPerVertex;
     }
 
     public void setMinEdgesPerVertex(int minEdgesPerVertex) {
@@ -83,7 +89,7 @@ public class Configuration {
     }
 
     public int getMaxCost() {
-        return maxCost;
+        return this.maxCost;
     }
 
     public void setMaxCost(int maxCost) {

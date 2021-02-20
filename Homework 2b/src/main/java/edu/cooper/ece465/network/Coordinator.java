@@ -25,7 +25,7 @@ public class Coordinator {
         /*graph.generateRandomGraph(configuration.getNumVertices(),
                 configuration.getMinEdgesPerVertex(),
                 configuration.getMaxCost());*/
-        graph.makeGraph("../graph.txt");
+        graph.makeGraph(configuration.getInputFile());
         ArrayList<ObjectInputStream> ois = new ArrayList<>();
         ArrayList<ObjectOutputStream> oos = new ArrayList<>();
 

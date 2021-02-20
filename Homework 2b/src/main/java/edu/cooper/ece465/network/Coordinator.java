@@ -1,12 +1,9 @@
 package edu.cooper.ece465.network;
 
+import edu.cooper.ece465.model.Configuration;
 import edu.cooper.ece465.model.Graph;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.net.Socket;
@@ -15,49 +12,46 @@ import java.net.ServerSocket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Server {
+public class Coordinator {
     private static final Scanner in = new Scanner(System.in);
-    private static final Logger LOG = LogManager.getLogger(Server.class);
+    private static final Logger LOG = LogManager.getLogger(Coordinator.class);
 
     public static void main(String[] args) throws Exception {
         LOG.debug("Server.main() started");
 
+        Configuration configuration = new Configuration("config.json");
+
         Graph graph = new Graph();
-        String inFile, outFile;
-        System.out.println("Enter the name of a graph file: ");
-        inFile = in.next();
-        graph.makeGraph(inFile);
-
-        System.out.println("Enter the name of IPs file: ");
-        File portsFile = new File(in.next());
-        BufferedReader br = new BufferedReader(new FileReader(portsFile));
-
+        graph.generateRandomGraph(configuration.getNumVertices(),
+                configuration.getMinEdgesPerVertex(),
+                configuration.getMaxCost());
+//        graph.makeGraph("graph.txt");
         ArrayList<ObjectInputStream> ois = new ArrayList<>();
         ArrayList<ObjectOutputStream> oos = new ArrayList<>();
 
-        String ip;
-        int numClients = 0;
-        while ((ip = br.readLine()) != null) {
-            try(ServerSocket serverSocket = new ServerSocket(Integer.parseInt(ip.substring(ip.indexOf(':') + 1)))) {
-                System.out.println("Listening to " + ip);
+        int numNodes = 0;
+        ArrayList<String> sockets = configuration.getSockets();
+        for (int i = 0; i<sockets.size(); i++) {
+            try(ServerSocket serverSocket = new ServerSocket(Integer.parseInt(sockets.get(i).substring(sockets.get(i).indexOf(':') + 1)))) {
+                System.out.println("Listening to " + sockets.get(i));
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Connected to " + clientSocket);
 
                 ois.add(new ObjectInputStream(clientSocket.getInputStream()));
                 oos.add(new ObjectOutputStream(clientSocket.getOutputStream()));
 
-                numClients += 1;
+                numNodes += 1;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
         int numVert = graph.getNodeList().size();
-        int factor = (int) Math.floor(numVert/numClients);
+        int factor = (int) Math.floor(numVert/numNodes);
 
         int n = 0;
-        for (int j = 0; j < numClients; j++) {
-            if(j < numVert % numClients) {
+        for (int j = 0; j < numNodes; j++) {
+            if(j < numVert % numNodes) {
                 oos.get(j).writeObject(new Package(j*factor + n, ((j*factor) + factor) + 1 + n, graph));
                 n += 1;
             } else {
@@ -65,7 +59,7 @@ public class Server {
             }
         }
 
-        for (int j = 0; j < numClients; j++) {
+        for (int j = 0; j < numNodes; j++) {
             Package p = (Package) ois.get(j).readObject();
             for (int k = p.getStart(); k < p.getEnd(); k++) {
                 for (int a = 0; a < numVert; a++) {
@@ -75,14 +69,12 @@ public class Server {
             }
         }
 
-        for (int j = 0; j < numClients; j++) {
+        for (int j = 0; j < numNodes; j++) {
             ois.get(j).close();
             oos.get(j).close();
         }
 
-        System.out.println("Enter the name of an output file: ");
-        outFile = in.next();
-        graph.makeOut(outFile);
+        graph.makeOut(configuration.getOutputFile());
 
         LOG.debug("Server.main() ended");
     }

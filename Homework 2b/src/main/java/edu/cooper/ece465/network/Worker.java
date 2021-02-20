@@ -11,18 +11,19 @@ import edu.cooper.ece465.threading.DijkstraParallel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Client implements Runnable {
-    public int NUM_THREADS = 4;
+public class Worker implements Runnable {
 
     private final int port;
     private final InetAddress ip;
+    private final int numThreads;
     private ObjectInputStream ois = null;
     private ObjectOutputStream oos = null;
-    private static final Logger LOG = LogManager.getLogger(Client.class);
+    private static final Logger LOG = LogManager.getLogger(Worker.class);
 
-    public Client(String ip, int p) throws Exception {
+    public Worker(String ip, int p, int n) throws Exception {
         this.ip = InetAddress.getByName(ip);
         this.port = p;
+        this.numThreads = n;
     }
 
     @Override
@@ -36,7 +37,7 @@ public class Client implements Runnable {
             Package p = (Package) this.ois.readObject();
             Graph graph = p.getGraph();
             DijkstraParallel dijkstraParallel = new DijkstraParallel();
-            dijkstraParallel.solveShortestPaths(graph, this.NUM_THREADS, p.getStart(), p.getEnd());
+            dijkstraParallel.solveShortestPaths(graph, this.numThreads, p.getStart(), p.getEnd());
 
             this.oos.writeObject(p);
 

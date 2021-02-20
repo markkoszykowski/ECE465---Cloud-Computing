@@ -1,0 +1,8 @@
+{
+	"numThreads": 4,
+	"sockets": ["127.0.0.1:1859", "127.0.0.1:1860"],
+	"outputFile": "output.txt",
+	"numVertices": 100,
+	"minEdgesPerVertex": 10,
+	"maxCost": 30
+}

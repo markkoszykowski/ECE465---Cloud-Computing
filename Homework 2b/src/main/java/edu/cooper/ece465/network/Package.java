@@ -5,6 +5,11 @@ import edu.cooper.ece465.model.Graph;
 import java.io.Serializable;
 
 public class Package implements Serializable {
+    /**
+     * A class that carries data necessary for transfer between the coordinator and the workers.
+     * A Package instance carries the graph, and the starting and ending vertices for the given worker.
+     * The Package class allows for streamlined communication.
+     */
     private final int start, end;
     private final Graph graph;
 

@@ -41,29 +41,19 @@ public class Configuration {
     }
 
 
-    public int getNumThreads() {
-        return this.numThreads;
-    }
+    public int getNumThreads() { return this.numThreads; }
 
-    public void setNumThreads(int numThreads) {
-        this.numThreads = numThreads;
-    }
+    public void setNumThreads(int numThreads) { this.numThreads = numThreads; }
 
     public String getInputFile() { return this.inputFile; }
 
     public void setInputFile(String inputFile) { this.inputFile = inputFile; }
 
-    public String getOutputFile() {
-        return this.outputFile;
-    }
+    public String getOutputFile() { return this.outputFile; }
 
-    public void setOutputFile(String outputFile) {
-        this.outputFile = outputFile;
-    }
+    public void setOutputFile(String outputFile) { this.outputFile = outputFile; }
 
-    public ArrayList<String> getSockets() {
-        return this.sockets;
-    }
+    public ArrayList<String> getSockets() { return this.sockets; }
 
     public void setSockets(JSONArray sockets) {
         this.sockets = new ArrayList<>();
@@ -72,27 +62,15 @@ public class Configuration {
         }
     }
 
-    public int getNumVertices() {
-        return this.numVertices;
-    }
+    public int getNumVertices() { return this.numVertices; }
 
-    public void setNumVertices(int numVertices) {
-        this.numVertices = numVertices;
-    }
+    public void setNumVertices(int numVertices) { this.numVertices = numVertices; }
 
-    public int getMinEdgesPerVertex() {
-        return this.minEdgesPerVertex;
-    }
+    public int getMinEdgesPerVertex() { return this.minEdgesPerVertex; }
 
-    public void setMinEdgesPerVertex(int minEdgesPerVertex) {
-        this.minEdgesPerVertex = minEdgesPerVertex;
-    }
+    public void setMinEdgesPerVertex(int minEdgesPerVertex) { this.minEdgesPerVertex = minEdgesPerVertex; }
 
-    public int getMaxCost() {
-        return this.maxCost;
-    }
+    public int getMaxCost() { return this.maxCost; }
 
-    public void setMaxCost(int maxCost) {
-        this.maxCost = maxCost;
-    }
+    public void setMaxCost(int maxCost) { this.maxCost = maxCost; }
 }

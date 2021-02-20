@@ -3,7 +3,6 @@ package edu.cooper.ece465.network;
 import edu.cooper.ece465.model.Configuration;
 import edu.cooper.ece465.model.Graph;
 
-
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;

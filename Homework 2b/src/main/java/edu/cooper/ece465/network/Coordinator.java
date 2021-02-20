@@ -3,9 +3,10 @@ package edu.cooper.ece465.network;
 import edu.cooper.ece465.model.Configuration;
 import edu.cooper.ece465.model.Graph;
 
-import java.io.*;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.net.Socket;
 import java.net.ServerSocket;
 
@@ -13,27 +14,26 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Coordinator {
-    private static final Scanner in = new Scanner(System.in);
     private static final Logger LOG = LogManager.getLogger(Coordinator.class);
 
     public static void main(String[] args) throws Exception {
-        LOG.debug("Server.main() started");
+        LOG.debug("Coordinator.main() started");
 
-        Configuration configuration = new Configuration("config.json");
+        Configuration configuration = new Configuration("../config.json");
 
         Graph graph = new Graph();
-        graph.generateRandomGraph(configuration.getNumVertices(),
+        /*graph.generateRandomGraph(configuration.getNumVertices(),
                 configuration.getMinEdgesPerVertex(),
-                configuration.getMaxCost());
-//        graph.makeGraph("graph.txt");
+                configuration.getMaxCost());*/
+        graph.makeGraph("../graph.txt");
         ArrayList<ObjectInputStream> ois = new ArrayList<>();
         ArrayList<ObjectOutputStream> oos = new ArrayList<>();
 
         int numNodes = 0;
         ArrayList<String> sockets = configuration.getSockets();
-        for (int i = 0; i<sockets.size(); i++) {
-            try(ServerSocket serverSocket = new ServerSocket(Integer.parseInt(sockets.get(i).substring(sockets.get(i).indexOf(':') + 1)))) {
-                System.out.println("Listening to " + sockets.get(i));
+        for (String socket : sockets) {
+            try (ServerSocket serverSocket = new ServerSocket(Integer.parseInt(socket.substring(socket.indexOf(':') + 1)))) {
+                System.out.println("Listening to " + socket);
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Connected to " + clientSocket);
 
@@ -76,6 +76,6 @@ public class Coordinator {
 
         graph.makeOut(configuration.getOutputFile());
 
-        LOG.debug("Server.main() ended");
+        LOG.debug("Coordinator.main() ended");
     }
 }

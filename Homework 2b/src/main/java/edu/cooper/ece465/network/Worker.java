@@ -1,18 +1,17 @@
 package edu.cooper.ece465.network;
 
 import edu.cooper.ece465.model.Graph;
+import edu.cooper.ece465.threading.DijkstraParallel;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import edu.cooper.ece465.threading.DijkstraParallel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Worker implements Runnable {
-
     private final int port;
     private final InetAddress ip;
     private final int numThreads;
@@ -28,7 +27,7 @@ public class Worker implements Runnable {
 
     @Override
     public void run() {
-        LOG.debug("Client.run() started");
+        LOG.debug("Worker.run() started [port: " + this.port + "]");
 
         try (Socket socket = new Socket(this.ip, this.port)) {
             this.oos = new ObjectOutputStream(socket.getOutputStream());
@@ -47,6 +46,6 @@ public class Worker implements Runnable {
             e.printStackTrace();
         }
 
-        LOG.debug("Client.run() ended");
+        LOG.debug("Worker.run() ended [port: " + this.port + "]");
     }
 }

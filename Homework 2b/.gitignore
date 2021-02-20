@@ -1,5 +1,6 @@
 .idea
 app.version
+output.txt
 *.iml
 
 # Compiled class file

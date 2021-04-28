@@ -16,7 +16,7 @@ echo "Public IP addresses: ${INSTANCES_IPS}" | tee -a ${LOGFILE}
 for host in ${INSTANCES_IPS}
 do
 	echo "Running ${PROG} at ${USER}@${host}:~/ ..." | tee -a ${LOGFILE}
-	ssh -i ${KEY_FILE} ${USER}@${host} "${PROG}" | tee -a ${LOGFILE}
+	ssh -i ${KEY_FILE} ${USER}@${host} "java -cp ${PROG} ${CLASSPATH}" | tee -a ${LOGFILE}
 done
 
 echo "Done." | tee -a ${LOGFILE}

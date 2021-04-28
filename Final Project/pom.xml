@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.cooper.ece465</groupId>
-    <artifactId>ece465_hw3a</artifactId>
-    <version>v3.1</version>
+    <artifactId>ece465_finalProject</artifactId>
+    <version>v2.2</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

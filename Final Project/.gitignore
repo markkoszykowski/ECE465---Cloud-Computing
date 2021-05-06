@@ -1,7 +1,10 @@
 app.version
-output.txt
-.idea
+.idea/
+.settings/
+bin/
 *.iml
+.classpath
+.project
 
 # Compiled class file
 *.class

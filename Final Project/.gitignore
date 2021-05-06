@@ -5,6 +5,7 @@ bin/
 *.iml
 .classpath
 .project
+ips.txt
 
 # Compiled class file
 *.class

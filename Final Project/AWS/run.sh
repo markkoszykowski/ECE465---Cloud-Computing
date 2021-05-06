@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # fetch config from AWS for currently running infrastructure
-source ./load_config.sh
+source ./AWS/load_config.sh
 
 NOW=$(date '+%Y%m%d%H%M%S')
 LOGFILE="./logs/run-${NOW}.log"

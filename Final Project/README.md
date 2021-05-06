@@ -2,6 +2,24 @@
 
 Some notes on FFT and how it works... yadda yadda yadda
 
+## AWS Usage (This will be automated in the backend server eventually)
+
+Once the Git repository has been cloned, simply enter the root and run
+
+    sh ./AWS/create_ec2.sh
+
+to set up the VPC and EC2 instances. To install Java and deploy the compiled program to the instances run
+
+    sh ./AWS/deploy.sh
+
+With Java installed and the binaries deployed, running the binaries can be done with
+
+    sh ./AWS/run.sh
+
+Terminate instances once done with usage. (This will NOT be automated in the backend) This can be done by running
+
+    sh ./AWS/terminate.sh
+
 ## Usage
 
 Once the Git repository has been cloned, simply enter the root and run

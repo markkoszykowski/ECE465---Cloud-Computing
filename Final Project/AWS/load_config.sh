@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ./config.sh
+source ./AWS/config.sh
 
 VPC_ID=$(aws ec2 describe-instances ${PREAMBLE} --filters Name=instance-state-name,Values=running Name=tag:${APP_TAG_NAME},Values=${APP_TAG_VALUE} --query 'Reservations[0].Instances[0].VpcId' --output text)
 echo "VPC_ID=${VPC_ID}"
@@ -18,7 +18,7 @@ echo "SN_ID_PRIVATE=${SN_ID_PRIVATE}"
 IGW_ID=$(aws ec2 describe-internet-gateways ${PREAMBLE} --filters Name=tag:${APP_TAG_NAME},Values=${APP_TAG_VALUE} --query 'InternetGateways[0].InternetGatewayId' --output text)
 echo "IGW_ID=${IGW_ID}"
 
-RT_TABLE_ID=$(aws ec2 describe-route-tables ${PREAMBLE} --filters Name=tag:${APP_TAG_NAME},Values=${APP_TAG_VALUE} Name=route.gateway-id,Values=${IGW_ID} --query 'RouteTables[*].RouteTableId' --output text | tr -s '\t' ' ')
+RT_TABLE_ID=$(aws ec2 describe-route-tables ${PREAMBLE} --filters Name=tag:${APP_TAG_NAME},Values=${APP_TAG_VALUE} Name=route.gateway-id,Values=${IGW_ID} --query 'RouteTables[*].RouteTableId' --output text)
 echo "RT_TABLE_ID=${RT_TABLE_ID}"
 
 RT_TABLE_ASSN_ID=$(aws ec2 describe-route-tables ${PREAMBLE} --filters Name=tag:${APP_TAG_NAME},Values=${APP_TAG_VALUE} Name=route.gateway-id,Values=${IGW_ID} --query 'RouteTables[0].Associations[0].RouteTableAssociationId' --output text)

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ./create_vpc.sh
+source ./AWS/create_vpc.sh
 
 NOW=$(date '+%Y%m%d%H%M%S')
 LOGFILE="./logs/create_keypair-${NOW}.log"

@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 # fetch config from AWS for currently running infrastructure
-source ./load_config.sh
-
+source ./AWS/load_config.sh
 
 NOW=$(date '+%Y%m%d%H%M%S')
 LOGFILE="./logs/cleanup-${NOW}.log"
@@ -61,6 +60,8 @@ sleep 10
 # delete your VPC
 echo "Delete VPC" | tee -a ${LOGFILE}
 aws ec2 delete-vpc ${PREAMBLE} --vpc-id ${VPC_ID} | tee -a ${LOGFILE}
+
+rm ${IPS_FILE}
 
 echo "Done." | tee -a ${LOGFILE}
 

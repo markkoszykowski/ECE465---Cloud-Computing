@@ -23,3 +23,5 @@ INSTANCE_TYPE=t2.micro
 USER=ec2-user
 
 PROG="./hello.sh"
+
+IPS_FILE="./ips.txt"

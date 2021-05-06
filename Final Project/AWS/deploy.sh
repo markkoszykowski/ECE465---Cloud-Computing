@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # fetch config from AWS for currently running infrastructure
-source ./load_config.sh
+source ./AWS/load_config.sh
 
 NOW=$(date '+%Y%m%d%H%M%S')
 LOGFILE="./logs/deploy-${NOW}.log"
@@ -15,6 +15,8 @@ echo "Public IP addresses: ${INSTANCES_IPS}" | tee -a ${LOGFILE}
 
 for host in ${INSTANCES_IPS}
 do
+  # adds host to trusted ssh hosts so that it does not wait on request
+  ssh-keyscan -H ${host} >> ~/.ssh/known_hosts | tee -a ${LOGFILE}
 	echo "Copying over ${TARG} to ${USER}@${host}:~/ ..." | tee -a ${LOGFILE}
 	scp -i ${KEY_FILE} -r ${TARG} ${USER}@${host}:~/ | tee -a ${LOGFILE}
 	echo "Installing JDK to ${USER}@${host}:~/ ..." | tee -a ${LOGFILE}

@@ -37,10 +37,10 @@ To remove the compiled code, simply enter the root and run
 
 ## Authors
 
-    - Mark Koszykowski
-    - Omar Thenmalai
+- Mark Koszykowski
+- Omar Thenmalai
 
 ## References
 
-    - [FFT Based Compression approach for Medical Images](https://www.ripublication.com/ijaer18/ijaerv13n6_54.pdf)
-    - [Image Compression Using Fourier Techniques](https://www.maths.usyd.edu.au/u/olver/teaching/Computation/ExampleProject.pdf)
+- [FFT Based Compression approach for Medical Images](https://www.ripublication.com/ijaer18/ijaerv13n6_54.pdf)
+- [Image Compression Using Fourier Techniques](https://www.maths.usyd.edu.au/u/olver/teaching/Computation/ExampleProject.pdf)

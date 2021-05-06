@@ -1,12 +1,9 @@
-package edu.cooper.ece465;
+package edu.cooper.ece465.FFT;
+
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import edu.cooper.ece465.Complex;
-import edu.cooper.ece465.IterativeFFT;
-import edu.cooper.ece465.Image;
 
 public class Test {
 

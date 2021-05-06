@@ -1,8 +1,4 @@
-package edu.cooper.ece465;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Set;
+package edu.cooper.ece465.FFT;
 
 public class IterativeFFT {
 

@@ -1,4 +1,4 @@
-package edu.cooper.ece465;
+package edu.cooper.ece465.FFT;
 
 import java.util.Objects;
 

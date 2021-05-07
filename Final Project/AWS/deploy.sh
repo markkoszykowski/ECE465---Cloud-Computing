@@ -19,6 +19,8 @@ do
   ssh-keyscan -H ${host} >> ~/.ssh/known_hosts | tee -a ${LOGFILE}
 	echo "Copying over ${TARG} to ${USER}@${host}:~/ ..." | tee -a ${LOGFILE}
 	scp -i ${KEY_FILE} -r ${TARG} ${USER}@${host}:~/ | tee -a ${LOGFILE}
+	echo "Copying over ${IPS_FILE} to ${USER}@${host}:~/ ..." | tee -a ${LOGFILE}
+	scp -i ${KEY_FILE} -r ${IPS_FILE} ${USER}@${host}:~/ | tee -a ${LOGFILE}
 	echo "Installing JDK to ${USER}@${host}:~/ ..." | tee -a ${LOGFILE}
 	ssh -i ${KEY_FILE} ${USER}@${host} "sudo amazon-linux-extras install java-openjdk11"  | tee -a ${LOGFILE}
 done

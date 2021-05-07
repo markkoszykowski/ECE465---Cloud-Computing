@@ -6,12 +6,12 @@ public class IterativeFFT {
 	 Tukey-Cooley radix-2 inplace algorithm */
 	public Complex[] fft(Complex[] x) {
 		int n = x.length;
-        if (Integer.highestOneBit(n) != n) {
-            throw new RuntimeException("n is not a power of 2");
-        }
+		if (Integer.highestOneBit(n) != n) {
+			throw new RuntimeException("n is not a power of 2");
+		}
 
-        // bit reversal permutation
-        int shift = 1 + Integer.numberOfLeadingZeros(n);
+		// bit reversal permutation
+		int shift = 1 + Integer.numberOfLeadingZeros(n);
         for (int k = 0; k < n; k++) {
             int j = Integer.reverse(k) >>> shift;
             if (j > k) {
@@ -27,15 +27,14 @@ public class IterativeFFT {
                 double kth = -2 * k * Math.PI / L;
                 Complex w = new Complex(Math.cos(kth), Math.sin(kth));
                 for (int j = 0; j < n/L; j++) {
-                    Complex tao = w.times(x[j*L + k + L/2]);
-                    x[j*L + k + L/2] = x[j*L + k].minus(tao); 
-                    x[j*L + k]       = x[j*L + k].plus(tao); 
+                    Complex tao = w.times(x[j * L + k + L/2]);
+                    x[j * L + k + L/2] = x[j * L + k].minus(tao);
+                    x[j * L + k] = x[j * L + k].plus(tao);
                 }
             }
         }
-		return x;
+        return x;
 	}
-	
 	
 	/*
 	 *  Takes a 1D ifft on a row of data
@@ -74,7 +73,7 @@ public class IterativeFFT {
 		int height = x.length;
 		
 		// Take FFT row-wise first
-		for(int i=0; i<height; i++) {
+		for(int i = 0; i < height; i++) {
 			x[i] = fft(x[i]);
 		}
 		
@@ -120,50 +119,4 @@ public class IterativeFFT {
 		}
 		return x;
 	}
-	
-//	public Complex[][] compress(Complex[][] x, float threshold) {
-//		
-//		// Flatten the 2d array, taking the absolute value of each complex value before placing
-//		// it into the flattened array
-//		double[] flat = new double[x.length*x[0].length];
-//		for(int i=0; i<x.length; i++) {
-//			for(int j=0; j<x[0].length; j++) {
-//				flat[i*j+j] = x[i][j].abs();
-//			}
-//		}
-//		
-//		Arrays.sort(flat); // Sort the flat array
-//		
-//		// Get the unique values in the array. We will threshold by only taking values greater than 
-//		// or equal to the unique value located at threshold times the length of the sorted keyset
-//		HashMap<Double, Integer> uniqKeys = new HashMap<Double, Integer>();
-//		for (int i = 0; i < flat.length; i++) {
-//            uniqKeys.put(flat[i], i);
-//        }
-//		Set<Double> keys = uniqKeys.keySet();
-//		double[] sortedKeys = new double[keys.size()];
-//		
-//		// Take the unique keys and put them into array, then sort. Array is sorted from smallest to largest!
-//		int idx = 0;
-//		for (double key : keys) {
-//			sortedKeys[idx++] = key;
-//		}
-//		Arrays.sort(sortedKeys);
-//		
-//		// Find the index of the threshold value. Use that index to find the threshold value
-//		idx = (int) Math.floor((1-threshold)*sortedKeys.length);		
-//		double thresholdValue = sortedKeys[idx];
-//		
-//		// Apply the threshold to the FFT'd 2D array
-//		for(int i=0; i<x.length; i++) {
-//			for(int j=0; j<x[0].length; j++) {
-//				if(x[i][j].abs() < thresholdValue) {
-//					x[i][j] = new Complex(0, 0);
-//				}
-//			}
-//		}
-//		
-//		return x;
-//	}
-	
 }

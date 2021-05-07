@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 public class Test {
 
 	public static void main(String args[]) throws IOException {
+		System.out.println("Working Directory = " + Paths.get("").toAbsolutePath());
 		System.out.println("Compressing...");
 		Image image = new Image();
 		
@@ -15,8 +16,12 @@ public class Test {
 		
 		String inputPath = "sample4.jpg";
 		String outputPath = "test.jpg";
-		
-		image.readImage(inputPath);
+
+		try {
+			image.readImage(inputPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		System.out.println("Dimensions: " + image.width + "x" + image.height);
 		image.writeImage("test2.jpg");
 		image.rgbCompress((float) 0.01);

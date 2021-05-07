@@ -1,15 +1,17 @@
 package edu.cooper.ece465.FFT;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Set;
-
+import java.io.*;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
-
+import java.awt.image.BufferedImage;
 import java.awt.Color;
+
+import edu.cooper.ece465.threading.CompressThread;
+import edu.cooper.ece465.threading.DistributionInputThread;
+import edu.cooper.ece465.threading.DistributionOutputThread;
 
 public class Image {
 	
@@ -17,27 +19,31 @@ public class Image {
 	public int height;
 	public int width;
 	public Complex[][] red;
-	public Complex[][] blue;
 	public Complex[][] green;
+	public Complex[][] blue;
 	public IterativeFFT iterativeFFT;
 	
 	public Image() {
 		this.iterativeFFT = new IterativeFFT();
 	}
 	
-	public void readImage(String path) throws IOException {
+	public void readImage(String path) throws Exception {
 		this.img = ImageIO.read(new File(path));
 		
 		this.width = this.img.getWidth();
 		this.height = this.img.getHeight();
+
+		if (Integer.highestOneBit(this.width) != this.width || Integer.highestOneBit(this.height) != this.height) {
+			throw new Exception("Image much have dimensions that are a power of 2");
+		}
 		
 		this.red = new Complex[height][width];
 		this.green = new Complex[height][width];
 		this.blue = new Complex[height][width];
 		
 		// Load pixel data into 2D arrays, one for each color
-		for(int h=0; h<this.height; h++) {
-			for(int w=0; w<this.width; w++) {
+		for (int h = 0; h < this.height; h++) {
+			for (int w = 0; w < this.width; w++) {
 				Color color = new Color(img.getRGB(w, h), true);
 //				this.red[h][w] = new Complex((color.getRed() + color.getGreen() + color.getBlue())/3, 0);
 				this.red[h][w] = new Complex(color.getRed(), 0);
@@ -49,7 +55,7 @@ public class Image {
 	}
 	
 	
-	public void writeImage(String path) throws IOException {
+	public void writeImage(String path) {
 		BufferedImage imgOut = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		
 		double[][] r = this.complexToDouble(this.red);
@@ -80,7 +86,6 @@ public class Image {
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
-		
 	}
 
 	/*
@@ -90,18 +95,18 @@ public class Image {
 	public double[][] complexToDouble(Complex[][] x) {
 		double[][] y = new double[this.height][this.width];
 		double max = 0;
-		for (int i=0; i<this.height; i++) {
-			for(int j=0; j<this.width; j++) {
+		for (int i = 0; i < this.height; i++) {
+			for (int j = 0; j < this.width; j++) {
 				y[i][j] = x[i][j].re();
-				if(y[i][j] > max) {
+				if (y[i][j] > max) {
 					max = y[i][j];
 				}
 				
 				// Truncate values greater than 255 and less than 0.
-				if(y[i][j] > 255) {
+				if (y[i][j] > 255) {
 					y[i][j] = 255;
 				}
-				else if(y[i][j] < 0) {
+				else if (y[i][j] < 0) {
 					y[i][j] = 0;
 				}
 			}
@@ -123,39 +128,28 @@ public class Image {
 		
 		// Flatten the 2d array, taking the absolute value of each complex value before placing
 		// it into the flattened array
-		double[] flat = new double[x.length*x[0].length];
-		for(int i=0; i<x.length; i++) {
-			for(int j=0; j<x[0].length; j++) {
-				flat[i*j+j] = x[i][j].abs();
+		Double[] flat = new Double[x.length*x[0].length];
+		for (int i = 0; i < x.length; i++) {
+			for (int j = 0; j < x[0].length; j++) {
+				flat[i * x[0].length + j] = x[i][j].abs();
 			}
 		}
 		
-		Arrays.sort(flat); // Sort the flat array
-		
 		// Get the unique values in the array. We will threshold by only taking values greater than 
-		// or equal to the unique value located at threshold times the length of the sorted keyset
-		HashMap<Double, Integer> uniqKeys = new HashMap<Double, Integer>();
-		for (int i = 0; i < flat.length; i++) {
-            uniqKeys.put(flat[i], i);
-        }
-		Set<Double> keys = uniqKeys.keySet();
-		double[] sortedKeys = new double[keys.size()];
-		
-		// Take the unique keys and put them into array, then sort. Array is sorted from smallest to largest!
-		int idx = 0;
-		for (double key : keys) {
-			sortedKeys[idx++] = key;
-		}
-		Arrays.sort(sortedKeys);
-		
+		// or equal to the unique value located at threshold times the length of the sorted keyset.
+		// Array is sorted from smallest to largest!
+		Set<Double> uniques = new HashSet<>(Arrays.asList(flat));
+		double[] sortedVals = uniques.stream().mapToDouble(Double::doubleValue).toArray();
+		Arrays.sort(sortedVals);
+
 		// Find the index of the threshold value. Use that index to find the threshold value
-		idx = (int) Math.floor((1-threshold)*sortedKeys.length);		
-		double thresholdValue = sortedKeys[idx];
+		int idx = (int) Math.floor((1-threshold)*sortedVals.length);
+		double thresholdValue = sortedVals[idx];
 		
 		// Apply the threshold to the FFT'd 2D array
-		for(int i=0; i<x.length; i++) {
-			for(int j=0; j<x[0].length; j++) {
-				if(x[i][j].abs() < thresholdValue) {
+		for (int i = 0; i < x.length; i++) {
+			for (int j = 0; j < x[0].length; j++) {
+				if (x[i][j].abs() < thresholdValue) {
 					x[i][j] = new Complex(0, 0);
 				}
 			}
@@ -163,5 +157,81 @@ public class Image {
 		
 		return x;
 	}
-	
+
+	public void distRGBCompress(ArrayList<ObjectInputStream> ois, ArrayList<ObjectOutputStream> oos, float threshold, int numWorkers) {
+		// Distribution of Rows to do FFT
+		createPoolAndOutput(this.red, oos, numWorkers, 0);
+		createPoolAndOutput(this.green, oos, numWorkers, 0);
+		createPoolAndOutput(this.blue, oos, numWorkers, 0);
+		// Receive Calculated Rows
+		createPoolAndInput(this.red, ois, numWorkers, 0);
+		createPoolAndInput(this.green, ois, numWorkers, 0);
+		createPoolAndInput(this.blue, ois, numWorkers, 0);
+
+		// Distribution of Columns to do FFT
+		createPoolAndOutput(this.red, oos, numWorkers, 1);
+		createPoolAndOutput(this.green, oos, numWorkers, 1);
+		createPoolAndOutput(this.blue, oos, numWorkers, 1);
+		// Receive Calculated Columns
+		createPoolAndInput(this.red, ois, numWorkers, 1);
+		createPoolAndInput(this.green, ois, numWorkers, 1);
+		createPoolAndInput(this.blue, ois, numWorkers, 1);
+
+		// do thresholding here
+		ExecutorService pool = Executors.newFixedThreadPool(3);
+		pool.execute(new CompressThread(this.red, threshold));
+		pool.execute(new CompressThread(this.green, threshold));
+		pool.execute(new CompressThread(this.blue, threshold));
+		pool.shutdown();
+		awaitTerminationAfterShutdown(pool);
+
+		// Distribution of Rows to do IFFT
+		createPoolAndOutput(this.red, oos, numWorkers, 0);
+		createPoolAndOutput(this.green, oos, numWorkers, 0);
+		createPoolAndOutput(this.blue, oos, numWorkers, 0);
+		// Receive Calculated Rows
+		createPoolAndInput(this.red, ois, numWorkers, 0);
+		createPoolAndInput(this.green, ois, numWorkers, 0);
+		createPoolAndInput(this.blue, ois, numWorkers, 0);
+
+		// Distribution of Columns to do IFFT
+		createPoolAndOutput(this.red, oos, numWorkers, 1);
+		createPoolAndOutput(this.green, oos, numWorkers, 1);
+		createPoolAndOutput(this.blue, oos, numWorkers, 1);
+		// Receive Calculated Columns
+		createPoolAndInput(this.red, ois, numWorkers, 1);
+		createPoolAndInput(this.green, ois, numWorkers, 1);
+		createPoolAndInput(this.blue, ois, numWorkers, 1);
+	}
+
+	private static void awaitTerminationAfterShutdown(ExecutorService threadPool) {
+		try {
+			if (!threadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS)) {
+				threadPool.shutdownNow();
+			}
+		} catch (InterruptedException ex) {
+			threadPool.shutdownNow();
+			Thread.currentThread().interrupt();
+		}
+	}
+
+	private void createPoolAndOutput(Complex[][] image, ArrayList<ObjectOutputStream> oos, int numWorkers, int axis) {
+		// Cant have these all in the same loop because Red must be sent before Green which must be sent before Blue
+		ExecutorService pool = Executors.newFixedThreadPool(3);
+		for (int i = 0; i < numWorkers; i++) {
+			pool.execute(new DistributionOutputThread(image, oos.get(i), i, axis, numWorkers));
+		}
+		pool.shutdown();
+		awaitTerminationAfterShutdown(pool);
+	}
+
+	private void createPoolAndInput(Complex[][] image, ArrayList<ObjectInputStream> ois, int numWorkers, int axis) {
+		// Cant have all images in the same loop because Red must be received before Green which must be received before Blue
+		ExecutorService pool = Executors.newFixedThreadPool(3);
+		for (int i = 0; i < numWorkers; i++) {
+			pool.execute(new DistributionInputThread(image, ois.get(i), i, axis, numWorkers));
+		}
+		pool.shutdown();
+		awaitTerminationAfterShutdown(pool);
+	}
 }

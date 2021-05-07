@@ -41,7 +41,7 @@ public class App {
             return;
         }
 
-        Path ipFile = Paths.get(".ips.txt");
+        Path ipFile = Paths.get("./ips.txt");
 
         try {
             numWorkers = (int) (Files.lines(ipFile).count() - 1);

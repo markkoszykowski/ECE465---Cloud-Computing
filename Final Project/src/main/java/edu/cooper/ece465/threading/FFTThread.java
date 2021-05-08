@@ -17,6 +17,7 @@ public class FFTThread implements Runnable {
 
     @Override
     public void run() {
+        System.out.println(this.pixels[0][0]);
         if (this.axis == 0) {
             for (int i = 0; i < this.x; i++) {
                 // bit reversal permutation
@@ -25,8 +26,8 @@ public class FFTThread implements Runnable {
                     int j = Integer.reverse(k) >>> shift;
                     if (j > k) {
                         Complex temp = this.pixels[i][j];
-                        this.pixels[i][j].set(this.pixels[i][k]);
-                        this.pixels[i][k].set(temp);
+                        this.pixels[i][j] = this.pixels[i][k];
+                        this.pixels[i][k] = temp;
                     }
                 }
 
@@ -37,8 +38,8 @@ public class FFTThread implements Runnable {
                         Complex w = new Complex(Math.cos(kth), Math.sin(kth));
                         for (int j = 0; j < this.y/L; j++) {
                             Complex tao = w.times(this.pixels[i][j * L + k + L/2]);
-                            this.pixels[i][j * L + k + L/2].set(this.pixels[i][j * L + k].minus(tao));
-                            this.pixels[i][j * L + k].set(this.pixels[i][j * L + k].plus(tao));
+                            this.pixels[i][j * L + k + L/2] = this.pixels[i][j * L + k].minus(tao);
+                            this.pixels[i][j * L + k] = this.pixels[i][j * L + k].plus(tao);
                         }
                     }
                 }
@@ -52,8 +53,8 @@ public class FFTThread implements Runnable {
                     int j = Integer.reverse(k) >>> shift;
                     if (j > k) {
                         Complex temp = this.pixels[j][i];
-                        this.pixels[j][i].set(this.pixels[k][i]);
-                        this.pixels[k][i].set(temp);
+                        this.pixels[j][i] = this.pixels[k][i];
+                        this.pixels[k][i] = temp;
                     }
                 }
 
@@ -62,10 +63,10 @@ public class FFTThread implements Runnable {
                     for (int k = 0; k < L/2; k++) {
                         double kth = -2 * k * Math.PI / L;
                         Complex w = new Complex(Math.cos(kth), Math.sin(kth));
-                        for (int j = 0; j < this.y/L; j++) {
+                        for (int j = 0; j < this.x/L; j++) {
                             Complex tao = w.times(this.pixels[j * L + k + L/2][i]);
-                            this.pixels[j * L + k + L/2][i].set(this.pixels[j * L + k][i].minus(tao));
-                            this.pixels[j * L + k][i].set(this.pixels[j * L + k][i].plus(tao));
+                            this.pixels[j * L + k + L/2][i] = this.pixels[j * L + k][i].minus(tao);
+                            this.pixels[j * L + k][i] = this.pixels[j * L + k][i].plus(tao);
                         }
                     }
                 }

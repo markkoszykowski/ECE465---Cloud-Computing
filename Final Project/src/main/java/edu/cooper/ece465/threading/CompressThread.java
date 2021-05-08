@@ -27,13 +27,13 @@ public class CompressThread implements Runnable {
         double[] sortedVals = uniques.stream().mapToDouble(Double::doubleValue).toArray();
         Arrays.sort(sortedVals);
 
-        int ind = (int) Math.floor((this.threshold - 1) * sortedVals.length);
+        int ind = (int) Math.floor((1 - this.threshold) * sortedVals.length);
         double thresholdValue = sortedVals[ind];
 
         for (int i = 0; i < this.image.length; i++) {
             for (int j = 0; j < this.image[0].length; j++) {
                 if (this.image[i][j].abs() < thresholdValue) {
-                    this.image[i][j].set(new Complex(0, 0));
+                    this.image[i][j] = new Complex(0, 0);
                 }
             }
         }

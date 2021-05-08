@@ -44,7 +44,6 @@ public class Worker {
             //socket.setSoTimeout(120*1000);
             oos = new ObjectOutputStream(socket.getOutputStream());
             ois = new ObjectInputStream(socket.getInputStream());
-            System.out.println("Hola 0");
             while (true) {
                 String status = (String) ois.readObject();
                 if (status.equals("TERMINATE")) {
@@ -91,6 +90,7 @@ public class Worker {
         Complex[][] green = (Complex[][]) ois.readObject();
         Complex[][] blue = (Complex[][]) ois.readObject();
 
+        System.out.println(red[0][0]);
         int x = red.length;
         int y = red[0].length;
 
@@ -113,15 +113,16 @@ public class Worker {
         Complex[][] green = (Complex[][]) ois.readObject();
         Complex[][] blue = (Complex[][]) ois.readObject();
 
+        System.out.println(red[0][0]);
         int x = red.length;
         int y = red[0].length;
 
         LOG.debug("Performing IFFT along axis = " + axis);
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
-                red[i][j].set(red[i][j].conjugate());
-                green[i][j].set(green[i][j].conjugate());
-                blue[i][j].set(blue[i][j].conjugate());
+                red[i][j] = red[i][j].conjugate();
+                green[i][j] = green[i][j].conjugate();
+                blue[i][j] = blue[i][j].conjugate();
             }
         }
 
@@ -135,9 +136,9 @@ public class Worker {
 
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
-                red[i][j].set(red[i][j].conjugate());
-                green[i][j].set(green[i][j].conjugate());
-                blue[i][j].set(blue[i][j].conjugate());
+                red[i][j] = red[i][j].conjugate();
+                green[i][j] = green[i][j].conjugate();
+                blue[i][j] = blue[i][j].conjugate();
             }
         }
 
@@ -150,9 +151,9 @@ public class Worker {
         }
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
-                red[i][j].set(red[i][j].scale(1.0 / n));
-                green[i][j].set(green[i][j].scale(1.0 / n));
-                blue[i][j].set(blue[i][j].scale(1.0 / n));
+                red[i][j] = red[i][j].scale(1.0 / n);
+                green[i][j] = green[i][j].scale(1.0 / n);
+                blue[i][j] = blue[i][j].scale(1.0 / n);
             }
         }
 

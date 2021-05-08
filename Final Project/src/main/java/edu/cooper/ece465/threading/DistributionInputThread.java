@@ -17,11 +17,12 @@ public class DistributionInputThread implements Runnable {
         this.ois = ois;
         this.node = n;
         this.axis = a;
-        this.numWorkers = n;
+        this.numWorkers = num;
     }
 
     @Override
     public void run() {
+        System.out.println(this.image[0][0]);
         if (this.axis == 0) {
             int size, offset;
             int factor = (int) Math.floor(this.image.length / this.numWorkers);
@@ -36,10 +37,7 @@ public class DistributionInputThread implements Runnable {
             Complex[][] receiving;
             try {
                 receiving = (Complex[][]) ois.readObject();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
                 return;
             }
@@ -52,9 +50,13 @@ public class DistributionInputThread implements Runnable {
                 System.out.println("Received width: " + receiving[0].length);
             }
 
+            System.out.println("Input Node(" + this.numWorkers + ": " + this.node);
+            System.out.println("Dimensions: " + receiving.length + "x" + receiving[0].length);
+            System.out.println("Axis: " + this.axis);
+
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < this.image[0].length; j++) {
-                    this.image[(this.node * factor + offset) + i][j].set(receiving[i][j]);
+                    this.image[(this.node * factor + offset) + i][j] = receiving[i][j];
                 }
             }
         }
@@ -72,10 +74,7 @@ public class DistributionInputThread implements Runnable {
             Complex[][] receiving;
             try {
                 receiving = (Complex[][]) ois.readObject();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
                 return;
             }
@@ -88,9 +87,13 @@ public class DistributionInputThread implements Runnable {
                 System.out.println("Received width: " + receiving[0].length);
             }
 
+            System.out.println("Input Node(" + this.numWorkers + ": " + this.node);
+            System.out.println("Dimensions: " + receiving.length + "x" + receiving[0].length);
+            System.out.println("Axis: " + this.axis);
+
             for (int i = 0; i < this.image.length; i++) {
                 for (int j = 0; j < size; j++) {
-                    this.image[i][(this.node * factor + offset) + j].set(receiving[i][j]);
+                    this.image[i][(this.node * factor + offset) + j] = receiving[i][j];
                 }
             }
         }

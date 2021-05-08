@@ -63,13 +63,12 @@ public class App {
 
                 ois.add(new ObjectInputStream(clientSocket.getInputStream()));
                 oos.add(new ObjectOutputStream(clientSocket.getOutputStream()));
-                System.out.println("Hola 0");
+
                 oos.get(i).writeObject("HANDSHAKE");
                 String handshake = (String) ois.get(i).readObject();
                 if (!handshake.equals("HANDSHAKE RECEIVED")) {
                     return;
                 }
-                System.out.println("Hola 1");
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -77,7 +76,7 @@ public class App {
 
         File f = new File(".\\tmp");
         f.mkdir();
-        System.out.println("Hola 2");
+
         staticFiles.location("/static");
 
         Gson gson = new GsonBuilder().setLenient().create();
@@ -116,7 +115,7 @@ public class App {
                     //res.type("application/json");
                     res.type("text/html");
                 });
-        System.out.println("Hola 3");
+
         // ping method to text connection
         get("/ping", (req, res) -> "OK");
 

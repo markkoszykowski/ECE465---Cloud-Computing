@@ -123,6 +123,23 @@ public class App {
             req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("./tmp"));
             Part filePart = req.raw().getPart("image");
 
+            String comp = req.queryParams("compression");
+            float compression;
+            try {
+                compression = Float.parseFloat(comp);
+            } catch (NumberFormatException e) {
+                res.status(400);
+                return "Compression must be a value!";
+            }
+            if (!(compression > 0.0 && compression <= 1.0)) {
+                if (compression == 0.0) {
+                    res.status(400);
+                    return "Just delete the file!";
+                }
+                res.status(400);
+                return "Compression value must be between 0 and 1";
+            }
+
             try (InputStream inputStream = filePart.getInputStream()) {
                 OutputStream outputStream = new FileOutputStream("./tmp/" + filePart.getSubmittedFileName());
                 IOUtils.copy(inputStream, outputStream);
@@ -157,7 +174,7 @@ public class App {
 
             // some_FFT_function(renamedFile);
             try {
-                compress_image(ois, oos, "./tmp/" + filePart.getSubmittedFileName(), "./tmp/" + photoID);
+                compress_image(ois, oos, "./tmp/" + filePart.getSubmittedFileName(), "./tmp/" + photoID, compression);
             } catch (Exception e) {
                 if (e instanceof IOException) {
                     res.status(500);
@@ -220,10 +237,10 @@ public class App {
         return photoID;
     }
 
-    private static void compress_image(ArrayList<ObjectInputStream> ois, ArrayList<ObjectOutputStream> oos, String orgPath, String comPath) throws Exception {
+    private static void compress_image(ArrayList<ObjectInputStream> ois, ArrayList<ObjectOutputStream> oos, String orgPath, String comPath, float compression) throws Exception {
         Image image = new Image();
         image.readImage(orgPath);
-        image.distRGBCompress(ois, oos, (float) 0.01, numWorkers);
+        image.distRGBCompress(ois, oos, compression, numWorkers);
         image.writeImage(comPath);
     }
 }

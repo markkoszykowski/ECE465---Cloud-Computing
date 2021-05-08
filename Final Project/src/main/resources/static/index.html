@@ -2,15 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Mark Koszykowski & Omar Thenmalai ECE465 Final Project</title>
+    <title>ECE465</title>
 </head>
 <body>
+<h1>Mark Koszykowski & Omar Thenmalai ECE465 Final Project</h1>
 <h2>Distributed FFT for Image Compression</h2>
 <hr>
 <div style="display:block">
     <form action="/upload" method="post" enctype="multipart/form-data">
         <label for="image">Select a file</label>
         <input type="file" id="image" name="image"/>
+        <label for="compression">Enter a Compression Value (0.0 - 1.0)</label>
+        <input type="text" id="compression" name="compression"/>
         <input type="submit" id="buttonUpload" value="Upload"/>
         <br>
     </form>

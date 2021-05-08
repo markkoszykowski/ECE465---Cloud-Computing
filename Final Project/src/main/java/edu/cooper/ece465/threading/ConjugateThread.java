@@ -18,7 +18,7 @@ public class ConjugateThread implements Runnable {
     public void run() {
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
-                this.image[i][j] = this.image[i][i].conjugate();
+                this.image[i][j] = this.image[i][j].conjugate();
             }
         }
     }

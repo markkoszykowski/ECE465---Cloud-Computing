@@ -26,9 +26,9 @@ Once the Git repository has been cloned, simply enter the root and run
 
     sh ./build.sh
 
-At this point, a 'target' folder should have been created. To startup the backend server of this service, enter the 'target' folder and run
+At this point, a 'target' folder should have been created. To startup the backend server of this service, run
 
-    java -cp ece465_finalProject-v2.2-jar-with-dependencies.jar edu.cooper.ece465.App
+    java -cp target/ece465_finalProject-v2.2-jar-with-dependencies.jar edu.cooper.ece465.App
 
 At this point, a backend server will be running which is accessible through the following domain
 

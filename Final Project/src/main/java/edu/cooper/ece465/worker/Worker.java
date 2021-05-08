@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import edu.cooper.ece465.threading.ConjugateThread;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -87,8 +88,8 @@ public class Worker {
 
     public static void doFFT(ObjectInputStream ois, ObjectOutputStream oos, int axis) throws IOException, ClassNotFoundException {
         LOG.debug("Performing FFT along axis = " + axis);
+        // Parallelized so node doesnt need to wait for all channels to start doing work
         ExecutorService pool = Executors.newFixedThreadPool(3);
-
         Complex[][] red = (Complex[][]) ois.readObject();
         int x = red.length;
         int y = red[0].length;
@@ -108,20 +109,18 @@ public class Worker {
 
     public static void doIFFT(ObjectInputStream ois, ObjectOutputStream oos, int axis) throws IOException, ClassNotFoundException {
         LOG.debug("Performing IFFT along axis = " + axis);
+        // Parallelized so node doesnt need to wait for all channels to start doing work
+        ExecutorService pool1 = Executors.newFixedThreadPool(3);
         Complex[][] red = (Complex[][]) ois.readObject();
-        Complex[][] green = (Complex[][]) ois.readObject();
-        Complex[][] blue = (Complex[][]) ois.readObject();
-
         int x = red.length;
         int y = red[0].length;
-
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) {
-                red[i][j] = red[i][j].conjugate();
-                green[i][j] = green[i][j].conjugate();
-                blue[i][j] = blue[i][j].conjugate();
-            }
-        }
+        pool1.execute(new ConjugateThread(red, x, y));
+        Complex[][] green = (Complex[][]) ois.readObject();
+        pool1.execute(new ConjugateThread(green, x, y));
+        Complex[][] blue = (Complex[][]) ois.readObject();
+        pool1.execute(new ConjugateThread(blue, x, y));
+        pool1.shutdown();
+        awaitTerminationAfterShutdown(pool1);
 
         LOG.debug("Performing FFT along axis = " + axis + " as part of IFFT");
         ExecutorService pool2 = Executors.newFixedThreadPool(3);
@@ -131,6 +130,7 @@ public class Worker {
         pool2.shutdown();
         awaitTerminationAfterShutdown(pool2);
 
+        // No real point in parallelizing since operation (conjugate) is very fast
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 red[i][j] = red[i][j].conjugate();
@@ -146,6 +146,7 @@ public class Worker {
         else {
             n = x;
         }
+        // No real point in parallelizing since operation (scale) is very fast
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 red[i][j] = red[i][j].scale(1.0 / n);

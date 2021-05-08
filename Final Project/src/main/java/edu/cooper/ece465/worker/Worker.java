@@ -46,25 +46,26 @@ public class Worker {
             ois = new ObjectInputStream(socket.getInputStream());
             while (true) {
                 String status = (String) ois.readObject();
-                if (status.equals("TERMINATE")) {
-                    LOG.debug("TERMINATING node.");
-                    return;
-                }
-                else if (status.equals("HANDSHAKE")) {
-                    oos.writeObject("HANDSHAKE RECEIVED");
-                }
-                else if (status.equals("JOB")) {
-                    LOG.debug("Beginning JOB.");
+                switch (status) {
+                    case "TERMINATE":
+                        LOG.debug("TERMINATING node.");
+                        return;
+                    case "HANDSHAKE":
+                        oos.writeObject("HANDSHAKE RECEIVED");
+                        break;
+                    case "JOB":
+                        LOG.debug("Beginning JOB.");
 
-                    doFFT(ois, oos, 0);
+                        doFFT(ois, oos, 0);
 
-                    doFFT(ois, oos, 1);
+                        doFFT(ois, oos, 1);
 
-                    // Backend will do compression here (throwing away small coefficients)
+                        // Backend will do compression here (throwing away small coefficients)
 
-                    doIFFT(ois, oos, 0);
+                        doIFFT(ois, oos, 0);
 
-                    doIFFT(ois, oos, 1);
+                        doIFFT(ois, oos, 1);
+                        break;
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -85,19 +86,16 @@ public class Worker {
     }
 
     public static void doFFT(ObjectInputStream ois, ObjectOutputStream oos, int axis) throws IOException, ClassNotFoundException {
-        LOG.debug("Reading pixels values from backend");
-        Complex[][] red = (Complex[][]) ois.readObject();
-        Complex[][] green = (Complex[][]) ois.readObject();
-        Complex[][] blue = (Complex[][]) ois.readObject();
-
-        System.out.println(red[0][0]);
-        int x = red.length;
-        int y = red[0].length;
-
         LOG.debug("Performing FFT along axis = " + axis);
         ExecutorService pool = Executors.newFixedThreadPool(3);
+
+        Complex[][] red = (Complex[][]) ois.readObject();
+        int x = red.length;
+        int y = red[0].length;
         pool.execute(new FFTThread(red, axis, x, y));
+        Complex[][] green = (Complex[][]) ois.readObject();
         pool.execute(new FFTThread(green,axis, x, y));
+        Complex[][] blue = (Complex[][]) ois.readObject();
         pool.execute(new FFTThread(blue, axis, x, y));
         pool.shutdown();
         awaitTerminationAfterShutdown(pool);
@@ -109,15 +107,14 @@ public class Worker {
     }
 
     public static void doIFFT(ObjectInputStream ois, ObjectOutputStream oos, int axis) throws IOException, ClassNotFoundException {
+        LOG.debug("Performing IFFT along axis = " + axis);
         Complex[][] red = (Complex[][]) ois.readObject();
         Complex[][] green = (Complex[][]) ois.readObject();
         Complex[][] blue = (Complex[][]) ois.readObject();
 
-        System.out.println(red[0][0]);
         int x = red.length;
         int y = red[0].length;
 
-        LOG.debug("Performing IFFT along axis = " + axis);
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
                 red[i][j] = red[i][j].conjugate();
@@ -127,12 +124,12 @@ public class Worker {
         }
 
         LOG.debug("Performing FFT along axis = " + axis + " as part of IFFT");
-        ExecutorService pool = Executors.newFixedThreadPool(3);
-        pool.execute(new FFTThread(red, axis, x, y));
-        pool.execute(new FFTThread(green,axis, x, y));
-        pool.execute(new FFTThread(blue, axis, x, y));
-        pool.shutdown();
-        awaitTerminationAfterShutdown(pool);
+        ExecutorService pool2 = Executors.newFixedThreadPool(3);
+        pool2.execute(new FFTThread(red, axis, x, y));
+        pool2.execute(new FFTThread(green,axis, x, y));
+        pool2.execute(new FFTThread(blue, axis, x, y));
+        pool2.shutdown();
+        awaitTerminationAfterShutdown(pool2);
 
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {

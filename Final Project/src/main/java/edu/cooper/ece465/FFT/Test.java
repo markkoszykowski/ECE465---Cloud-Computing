@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 
 public class Test {
 
-	public static void main(String args[]) throws IOException {
+	public static void main(String[] args) throws IOException {
 		System.out.println("Working Directory = " + Paths.get("").toAbsolutePath());
 		System.out.println("Compressing...");
 		Image image = new Image();

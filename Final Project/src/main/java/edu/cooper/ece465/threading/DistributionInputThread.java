@@ -22,7 +22,6 @@ public class DistributionInputThread implements Runnable {
 
     @Override
     public void run() {
-        System.out.println(this.image[0][0]);
         if (this.axis == 0) {
             int size, offset;
             int factor = (int) Math.floor(this.image.length / this.numWorkers);
@@ -50,14 +49,8 @@ public class DistributionInputThread implements Runnable {
                 System.out.println("Received width: " + receiving[0].length);
             }
 
-            System.out.println("Input Node(" + this.numWorkers + ": " + this.node);
-            System.out.println("Dimensions: " + receiving.length + "x" + receiving[0].length);
-            System.out.println("Axis: " + this.axis);
-
             for (int i = 0; i < size; i++) {
-                for (int j = 0; j < this.image[0].length; j++) {
-                    this.image[(this.node * factor + offset) + i][j] = receiving[i][j];
-                }
+                System.arraycopy(receiving[i], 0, this.image[(this.node * factor + offset) + i], 0, this.image[0].length);
             }
         }
         else {
@@ -87,14 +80,9 @@ public class DistributionInputThread implements Runnable {
                 System.out.println("Received width: " + receiving[0].length);
             }
 
-            System.out.println("Input Node(" + this.numWorkers + ": " + this.node);
-            System.out.println("Dimensions: " + receiving.length + "x" + receiving[0].length);
-            System.out.println("Axis: " + this.axis);
-
             for (int i = 0; i < this.image.length; i++) {
-                for (int j = 0; j < size; j++) {
-                    this.image[i][(this.node * factor + offset) + j] = receiving[i][j];
-                }
+                if (size >= 0)
+                    System.arraycopy(receiving[i], 0, this.image[i], (this.node * factor + offset), size);
             }
         }
     }

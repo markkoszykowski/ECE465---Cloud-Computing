@@ -102,10 +102,4 @@ public class Complex implements Serializable {
     }
 
     public int hashCode() { return Objects.hash(this.re, this.im); }
-
-    // set method so arrays can be edited in threads
-    public void set(Complex b) {
-        this.re = b.re;
-        this.im = b.im;
-    }
 }

@@ -22,7 +22,6 @@ public class DistributionOutputThread implements Runnable {
 
     @Override
     public void run() {
-        System.out.println(this.image[0][0]);
         if (this.axis == 0) {
             int size, offset;
             int factor = (int) Math.floor(this.image.length / this.numWorkers);
@@ -36,16 +35,8 @@ public class DistributionOutputThread implements Runnable {
             }
             Complex[][] sending = new Complex[size][this.image[0].length];
 
-            System.out.println("Output Node(" + this.numWorkers + ": " + this.node);
-            System.out.println("Dimensions: " + size + "x" + this.image[0].length);
-            System.out.println("Axis: " + this.axis);
-
-
-
             for (int i = 0; i < size; i++) {
-                for (int j = 0; j < this.image[0].length; j++) {
-                    sending[i][j] = this.image[(this.node * factor + offset) + i][j];
-                }
+                System.arraycopy(this.image[(this.node * factor + offset) + i], 0, sending[i], 0, this.image[0].length);
             }
             try {
                 this.oos.writeObject(sending);
@@ -66,14 +57,8 @@ public class DistributionOutputThread implements Runnable {
             }
             Complex[][] sending = new Complex[this.image.length][size];
 
-            System.out.println("Output Node(" + this.numWorkers + ": " + this.node);
-            System.out.println("Dimensions: " + this.image.length + "x" + size);
-            System.out.println("Axis: " + this.axis);
-
             for (int i = 0; i < this.image.length; i++) {
-                for (int j = 0; j < size; j++) {
-                    sending[i][j] = this.image[i][(this.node * factor + offset) + j];
-                }
+                System.arraycopy(this.image[i], (this.node * factor + offset), sending[i], 0, size);
             }
             try {
                 this.oos.writeObject(sending);

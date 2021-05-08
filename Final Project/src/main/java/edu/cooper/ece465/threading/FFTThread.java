@@ -17,7 +17,6 @@ public class FFTThread implements Runnable {
 
     @Override
     public void run() {
-        System.out.println(this.pixels[0][0]);
         if (this.axis == 0) {
             for (int i = 0; i < this.x; i++) {
                 // bit reversal permutation
@@ -32,13 +31,13 @@ public class FFTThread implements Runnable {
                 }
 
                 // butterfly updates
-                for (int L = 2; L <= this.y; L = L+L) {
-                    for (int k = 0; k < L/2; k++) {
+                for (int L = 2; L <= this.y; L = L + L) {
+                    for (int k = 0; k < L / 2; k++) {
                         double kth = -2 * k * Math.PI / L;
                         Complex w = new Complex(Math.cos(kth), Math.sin(kth));
-                        for (int j = 0; j < this.y/L; j++) {
-                            Complex tao = w.times(this.pixels[i][j * L + k + L/2]);
-                            this.pixels[i][j * L + k + L/2] = this.pixels[i][j * L + k].minus(tao);
+                        for (int j = 0; j < this.y / L; j++) {
+                            Complex tao = w.times(this.pixels[i][j * L + k + L / 2]);
+                            this.pixels[i][j * L + k + L / 2] = this.pixels[i][j * L + k].minus(tao);
                             this.pixels[i][j * L + k] = this.pixels[i][j * L + k].plus(tao);
                         }
                     }
@@ -59,13 +58,13 @@ public class FFTThread implements Runnable {
                 }
 
                 // butterfly updates
-                for (int L = 2; L <= this.x; L = L+L) {
-                    for (int k = 0; k < L/2; k++) {
+                for (int L = 2; L <= this.x; L = L + L) {
+                    for (int k = 0; k < L / 2; k++) {
                         double kth = -2 * k * Math.PI / L;
                         Complex w = new Complex(Math.cos(kth), Math.sin(kth));
-                        for (int j = 0; j < this.x/L; j++) {
-                            Complex tao = w.times(this.pixels[j * L + k + L/2][i]);
-                            this.pixels[j * L + k + L/2][i] = this.pixels[j * L + k][i].minus(tao);
+                        for (int j = 0; j < this.x / L; j++) {
+                            Complex tao = w.times(this.pixels[j * L + k + L / 2][i]);
+                            this.pixels[j * L + k + L / 2][i] = this.pixels[j * L + k][i].minus(tao);
                             this.pixels[j * L + k][i] = this.pixels[j * L + k][i].plus(tao);
                         }
                     }

@@ -37,7 +37,7 @@ public class DistributionOutputThread implements Runnable {
 
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < this.image[0].length; j++) {
-                    sending[i][j].set(this.image[(this.node * factor + offset) + i][j]);
+                    sending[i][j] = this.image[(this.node * factor + offset) + i][j];
                 }
             }
             try {
@@ -61,7 +61,7 @@ public class DistributionOutputThread implements Runnable {
 
             for (int i = 0; i < this.image.length; i++) {
                 for (int j = 0; j < size; j++) {
-                    sending[i][j].set(this.image[i][(this.node * factor + offset) + j]);
+                    sending[i][j] = this.image[i][(this.node * factor + offset) + j];
                 }
             }
             try {

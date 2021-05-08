@@ -1,8 +1,9 @@
 package edu.cooper.ece465.FFT;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Complex {
+public class Complex implements Serializable {
     private double re;   // the real part
     private double im;   // the imaginary part
 

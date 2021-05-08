@@ -15,8 +15,6 @@ import edu.cooper.ece465.FFT.Complex;
 import edu.cooper.ece465.threading.FFTThread;
 
 public class Worker {
-    private static ObjectInputStream ois = null;
-    private static ObjectOutputStream oos = null;
     private static final Logger LOG = LogManager.getLogger(Worker.class);
 
     public static void main(String[] args) {
@@ -36,31 +34,38 @@ public class Worker {
             e.printStackTrace();
             return;
         }
-        try (Socket socket = new Socket(coordinatorIp, 6969)) {
-            socket.setSoTimeout(120*1000);
-            ois = new ObjectInputStream(socket.getInputStream());
-            oos = new ObjectOutputStream(socket.getOutputStream());
+        LOG.debug("Looking for Coordinator at IP: " + coordinatorIp);
+        System.out.println("Looking for Coordinator at IP: " + coordinatorIp);
 
+        ObjectInputStream ois;
+        ObjectOutputStream oos;
+
+        try (Socket socket = new Socket(coordinatorIp, 6969)) {
+            //socket.setSoTimeout(120*1000);
+            oos = new ObjectOutputStream(socket.getOutputStream());
+            ois = new ObjectInputStream(socket.getInputStream());
+            System.out.println("Hola 0");
             while (true) {
                 String status = (String) ois.readObject();
                 if (status.equals("TERMINATE")) {
                     LOG.debug("TERMINATING node.");
-                    ois.close();
-                    oos.close();
                     return;
+                }
+                else if (status.equals("HANDSHAKE")) {
+                    oos.writeObject("HANDSHAKE RECEIVED");
                 }
                 else if (status.equals("JOB")) {
                     LOG.debug("Beginning JOB.");
 
-                    doFFT(0);
+                    doFFT(ois, oos, 0);
 
-                    doFFT(1);
+                    doFFT(ois, oos, 1);
 
                     // Backend will do compression here (throwing away small coefficients)
 
-                    doIFFT(0);
+                    doIFFT(ois, oos, 0);
 
-                    doIFFT(1);
+                    doIFFT(ois, oos, 1);
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -80,7 +85,7 @@ public class Worker {
         }
     }
 
-    public static void doFFT(int axis) throws IOException, ClassNotFoundException {
+    public static void doFFT(ObjectInputStream ois, ObjectOutputStream oos, int axis) throws IOException, ClassNotFoundException {
         LOG.debug("Reading pixels values from backend");
         Complex[][] red = (Complex[][]) ois.readObject();
         Complex[][] green = (Complex[][]) ois.readObject();
@@ -103,7 +108,7 @@ public class Worker {
         oos.writeObject(blue);
     }
 
-    public static void doIFFT(int axis) throws IOException, ClassNotFoundException {
+    public static void doIFFT(ObjectInputStream ois, ObjectOutputStream oos, int axis) throws IOException, ClassNotFoundException {
         Complex[][] red = (Complex[][]) ois.readObject();
         Complex[][] green = (Complex[][]) ois.readObject();
         Complex[][] blue = (Complex[][]) ois.readObject();

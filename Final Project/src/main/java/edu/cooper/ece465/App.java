@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.io.*;
@@ -27,8 +28,6 @@ import edu.cooper.ece465.FFT.Image;
 
 public class App {
     private static int numWorkers;
-    private static final ArrayList<ObjectInputStream> ois = new ArrayList<>();
-    private static final ArrayList<ObjectOutputStream> oos = new ArrayList<>();
     private static final List<String> usedPhotoID = new ArrayList<>();
     private static final Logger LOG = LogManager.getLogger(App.class);
     private static final String password = "123456";
@@ -53,20 +52,32 @@ public class App {
         LOG.debug("Backend discovered " + numWorkers + " workers");
         System.out.println("Backend discovered " + numWorkers + " workers");
 
+        ArrayList<ObjectInputStream> ois = new ArrayList<>();
+        ArrayList<ObjectOutputStream> oos = new ArrayList<>();
+
         for (int i = 0; i < numWorkers; i++) {
             try (ServerSocket serverSocket = new ServerSocket(6969)) {
                 Socket clientSocket = serverSocket.accept();
+                LOG.debug("Connected to: " + clientSocket);
+                System.out.println("Connected to: " + clientSocket);
 
                 ois.add(new ObjectInputStream(clientSocket.getInputStream()));
                 oos.add(new ObjectOutputStream(clientSocket.getOutputStream()));
-            } catch (IOException e) {
+                System.out.println("Hola 0");
+                oos.get(i).writeObject("HANDSHAKE");
+                String handshake = (String) ois.get(i).readObject();
+                if (!handshake.equals("HANDSHAKE RECEIVED")) {
+                    return;
+                }
+                System.out.println("Hola 1");
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
 
         File f = new File(".\\tmp");
         f.mkdir();
-
+        System.out.println("Hola 2");
         staticFiles.location("/static");
 
         Gson gson = new GsonBuilder().setLenient().create();
@@ -105,7 +116,7 @@ public class App {
                     //res.type("application/json");
                     res.type("text/html");
                 });
-
+        System.out.println("Hola 3");
         // ping method to text connection
         get("/ping", (req, res) -> "OK");
 
@@ -148,7 +159,7 @@ public class App {
 
             // some_FFT_function(renamedFile);
             try {
-                compress_image("./tmp/" + filePart.getSubmittedFileName(), "./tmp/" + photoID);
+                compress_image(ois, oos, "./tmp/" + filePart.getSubmittedFileName(), "./tmp/" + photoID);
             } catch (Exception e) {
                 if (e instanceof IOException) {
                     res.status(500);
@@ -211,7 +222,7 @@ public class App {
         return photoID;
     }
 
-    private static void compress_image(String orgPath, String comPath) throws Exception {
+    private static void compress_image(ArrayList<ObjectInputStream> ois, ArrayList<ObjectOutputStream> oos, String orgPath, String comPath) throws Exception {
         Image image = new Image();
         image.readImage(orgPath);
         image.distRGBCompress(ois, oos, (float) 0.01, numWorkers);

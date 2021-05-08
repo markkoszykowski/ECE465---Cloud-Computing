@@ -159,6 +159,15 @@ public class Image {
 	}
 
 	public void distRGBCompress(ArrayList<ObjectInputStream> ois, ArrayList<ObjectOutputStream> oos, float threshold, int numWorkers) {
+		for (int i = 0; i < numWorkers; i++) {
+			try {
+				oos.get(i).writeObject("JOB");
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
+			}
+		}
+
 		// Distribution of Rows to do FFT
 		createPoolAndOutput(this.red, oos, numWorkers, 0);
 		createPoolAndOutput(this.green, oos, numWorkers, 0);

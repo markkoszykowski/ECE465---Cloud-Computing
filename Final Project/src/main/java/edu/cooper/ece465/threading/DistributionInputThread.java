@@ -81,8 +81,7 @@ public class DistributionInputThread implements Runnable {
             }
 
             for (int i = 0; i < this.image.length; i++) {
-                if (size >= 0)
-                    System.arraycopy(receiving[i], 0, this.image[i], (this.node * factor + offset), size);
+                System.arraycopy(receiving[i], 0, this.image[i], (this.node * factor + offset), size);
             }
         }
     }

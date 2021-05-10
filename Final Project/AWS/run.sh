@@ -13,10 +13,18 @@ echo "Running run.sh at ${NOW}" | tee -a ${LOGFILE}
 INSTANCES_IPS=$(aws ec2 describe-instances ${PREAMBLE} --filters Name=instance-state-name,Values=running Name=tag:${APP_TAG_NAME},Values=${APP_TAG_VALUE} --query 'Reservations[*].Instances[*].PublicIpAddress' --output text | tr -s '\t' ' ')
 echo "Public IP addresses: ${INSTANCES_IPS}" | tee -a ${LOGFILE}
 
+NODE=0
 for host in ${INSTANCES_IPS}
 do
-	echo "Running ${PROG} at ${USER}@${host}:~/ ..." | tee -a ${LOGFILE}
-	ssh -i ${KEY_FILE} ${USER}@${host} "java -cp ${PROG} ${CLASSPATH}" | tee -a ${LOGFILE} &
+	if [ ${NODE} = 0 ]
+	then
+	  echo "Running ${PROG} at ${USER}@${host}:~/ ..." | tee -a ${LOGFILE}
+	  ssh -i ${KEY_FILE} ${USER}@${host} "java -cp ${PROG} ${COORD_CLASSPATH}" | tee -a ${LOGFILE} &
+	else
+	  echo "Running ${PROG} at ${USER}@${host}:~/ ..." | tee -a ${LOGFILE}
+	  ssh -i ${KEY_FILE} ${USER}@${host} "java -cp ${PROG} ${WORK_CLASSPATH}" | tee -a ${LOGFILE} &
+	fi
+	(( ++NODE ))
 done
 
 echo "Done." | tee -a ${LOGFILE}

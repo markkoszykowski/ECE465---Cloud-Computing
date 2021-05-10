@@ -73,8 +73,12 @@ public class App {
             }
         }
 
-        File f = new File(".\\tmp");
-        f.mkdir();
+        File f = new File(".\\FFTtmp");
+        boolean test = f.mkdir();
+        System.out.println(test);
+        f.setReadable(true, false);
+        f.setWritable(true, false);
+        f.setExecutable(true, false);
 
         staticFiles.location("/static");
 
@@ -120,7 +124,7 @@ public class App {
 
         // upload path
         post("/upload", (req, res) -> {
-            req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("./tmp"));
+            req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("./FFTtmp"));
             Part filePart = req.raw().getPart("image");
 
             String comp = req.queryParams("compression");
@@ -141,7 +145,7 @@ public class App {
             }
 
             try (InputStream inputStream = filePart.getInputStream()) {
-                OutputStream outputStream = new FileOutputStream("./tmp/" + filePart.getSubmittedFileName());
+                OutputStream outputStream = new FileOutputStream("./FFTtmp/" + filePart.getSubmittedFileName());
                 IOUtils.copy(inputStream, outputStream);
                 outputStream.close();
             }
@@ -161,7 +165,7 @@ public class App {
                 return "File has no extension, must be image file.";
             }
 
-            File orgFile = new File("./tmp/" + filePart.getSubmittedFileName());
+            File orgFile = new File("./FFTtmp/" + filePart.getSubmittedFileName());
 
             String fileType = new MimetypesFileTypeMap().getContentType(orgFile).split("/")[0];
             if (!fileType.equals("image")) {
@@ -174,7 +178,7 @@ public class App {
 
             // some_FFT_function(renamedFile);
             try {
-                compress_image(ois, oos, "./tmp/" + filePart.getSubmittedFileName(), "./tmp/" + photoID, compression);
+                compress_image(ois, oos, "./FFTtmp/" + filePart.getSubmittedFileName(), "./FFTtmp/" + photoID, compression);
             } catch (Exception e) {
                 if (e instanceof IOException) {
                     res.status(500);
@@ -199,7 +203,7 @@ public class App {
                 return null;
             }
             res.header("Content-disposition", "attachment; filename=" + photoID);
-            File file = new File("./tmp/" + photoID);
+            File file = new File("./FFTtmp/" + photoID);
             OutputStream outputStream = res.raw().getOutputStream();
             outputStream.write(Files.readAllBytes(file.toPath()));
             outputStream.flush();

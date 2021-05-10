@@ -23,6 +23,7 @@ do
 	scp -i ${KEY_FILE} -r ${IPS_FILE} ${USER}@${host}:~/ | tee -a ${LOGFILE}
 	echo "Installing JDK to ${USER}@${host}:~/ ..." | tee -a ${LOGFILE}
 	ssh -i ${KEY_FILE} ${USER}@${host} "sudo amazon-linux-extras install java-openjdk11"  | tee -a ${LOGFILE}
+	ssh -i ${KEY_FILE} ${USER}@${host} "mkdir FFTtmp"  | tee -a ${LOGFILE}
 done
 
 echo "Done." | tee -a ${LOGFILE}

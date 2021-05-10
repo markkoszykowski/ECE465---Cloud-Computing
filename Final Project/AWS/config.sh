@@ -24,7 +24,6 @@ USER=ec2-user
 
 TARG="./target"
 PROG="./target/ece465_finalProject-v2.2-jar-with-dependencies.jar"
-CLASSPATH="edu.cooper.ece465.HelloWorld"
 COORD_CLASSPATH="edu.cooper.ece465.App"
 WORK_CLASSPATH="edu.cooper.ece465.worker.Worker"
 

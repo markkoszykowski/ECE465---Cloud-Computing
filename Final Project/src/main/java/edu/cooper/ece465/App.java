@@ -15,12 +15,9 @@ import java.util.List;
 import java.util.UUID;
 import java.io.*;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import spark.utils.IOUtils;
-import spark.ResponseTransformer;
 import static spark.Spark.*;
 
 import edu.cooper.ece465.FFT.Image;
@@ -33,7 +30,7 @@ public class App {
 
     public static void main(String[] args) {
         try {
-            LOG.debug("Worker on Private IP: " + InetAddress.getLocalHost().getHostAddress() + "started.");
+            LOG.debug("Coordinator on Private IP: " + InetAddress.getLocalHost().getHostAddress() + "started.");
         } catch (UnknownHostException e) {
             e.printStackTrace();
             return;
@@ -73,23 +70,7 @@ public class App {
             }
         }
 
-        File f = new File(".\\FFTtmp");
-        boolean test = f.mkdir();
-        System.out.println(test);
-        f.setReadable(true, false);
-        f.setWritable(true, false);
-        f.setExecutable(true, false);
-
         staticFiles.location("/static");
-
-        Gson gson = new GsonBuilder().setLenient().create();
-
-        ResponseTransformer responseTransformer = model -> {
-            if (model == null) {
-                return "";
-            }
-            return gson.toJson(model);
-        };
 
         initExceptionHandler(Throwable::printStackTrace);
 
@@ -184,12 +165,9 @@ public class App {
                     res.status(500);
                     return "File was lost on server";
                 }
-                else {
-                    res.status(415);
-                    return "File must have dimensions that are a power of 2";
-                }
             }
 
+            orgFile.delete();
             res.status(200);
             res.redirect("/" + photoID);
             return "File uploaded and saved.\nFile ID: " + photoID;
@@ -242,9 +220,13 @@ public class App {
     }
 
     private static void compress_image(ArrayList<ObjectInputStream> ois, ArrayList<ObjectOutputStream> oos, String orgPath, String comPath, float compression) throws Exception {
-        Image image = new Image();
-        image.readImage(orgPath);
-        image.distRGBCompress(ois, oos, compression, numWorkers);
-        image.writeImage(comPath);
+        Image distImage = new Image();
+        distImage.readImage(orgPath);
+        long distStart = System.currentTimeMillis();
+        distImage.distRGBCompress(ois, oos, compression, numWorkers);
+        long distEnd = System.currentTimeMillis();
+        distImage.writeImage(comPath);
+        LOG.debug("Distributive Algorithm time for " + orgPath + ": " + (distEnd - distStart) / 1000 + " seconds");
+        System.out.println("Distributive Algorithm time for " + orgPath + ": " + (distEnd - distStart) / 1000 + " seconds");
     }
 }

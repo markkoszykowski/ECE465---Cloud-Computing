@@ -19,12 +19,6 @@ public class Worker {
     private static final Logger LOG = LogManager.getLogger(Worker.class);
 
     public static void main(String[] args) {
-        try {
-            LOG.debug("Worker on Private IP: " + InetAddress.getLocalHost().getHostAddress() + "started.");
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            return;
-        }
         String coordinatorIp;
         BufferedReader reader;
         try {
@@ -32,6 +26,13 @@ public class Worker {
             reader = new BufferedReader(new FileReader("./ips.txt"));
             coordinatorIp = reader.readLine();
         } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        try {
+            LOG.debug("Worker on Private IP: " + InetAddress.getLocalHost().getHostAddress() + " started.");
+            System.out.println("Worker on Private IP: " + InetAddress.getLocalHost().getHostAddress() + " started.");
+        } catch (UnknownHostException e) {
             e.printStackTrace();
             return;
         }

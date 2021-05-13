@@ -18,8 +18,8 @@ KEY_FILE=~/.ssh/pems/${KEY_NAME}.pem
 
 # for Amazon Linux 2 on x86_64
 AMI_ID=ami-0915bcb5fa77e4892
-INSTANCES_COUNT=4
-INSTANCE_TYPE=t2.micro
+INSTANCES_COUNT=9
+INSTANCE_TYPE=t2.xlarge
 USER=ec2-user
 
 TARG="./target"

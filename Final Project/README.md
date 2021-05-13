@@ -2,49 +2,46 @@
 
 Some notes on FFT and how it works... yadda yadda yadda
 
-## AWS Usage (This will be automated in the backend server eventually)
+## Example
 
-Once the Git repository has been cloned, simply enter the root and run
+|Original |  Compressed (with 0.05 compression rate) |
+|--------|------|
+|![](front/original.jpg)  |  ![](front/compressed.jpg)|
+| 32,841 bytes | 19,416 bytes |
 
-    sh ./AWS/create_ec2.sh
+## Requisites
 
-to set up the VPC and EC2 instances. To install Java and deploy the compiled program to the instances run
-
-    sh ./AWS/deploy.sh
-
-With Java installed and the binaries deployed, running the binaries can be done with
-
-    sh ./AWS/run.sh
-
-Terminate instances once done with usage. (This will NOT be automated in the backend) This can be done by running
-
-    sh ./AWS/terminate.sh
-
-## Usage
-
-Once the Git repository has been cloned, simply enter the root and run
+Prior to deploying and running the code in this repository on an AWS instance, the source code must be compiled on the local machine using the following command
 
     sh ./build.sh
 
-At this point, a 'target' folder should have been created. To startup the backend server of this service, run
+## AWS Usage
 
-    java -cp target/ece465_finalProject-v2.2-jar-with-dependencies.jar edu.cooper.ece465.App
+Run
 
-At this point, a backend server will be running which is accessible through the following domain
+    sh ./aws/create_ec2.sh
 
-    localhost:4567
+to set up the VPC and EC2 instances. To install Java and deploy the compiled program to the instances run
 
-or
+    sh ./aws/deploy.sh
 
-    127.0.0.1:4567
+With Java installed and the binaries deployed, running the binaries can be done with
 
-Right now image uploading is available. To download the image once you have uploaded, goto the following domain
+    sh ./aws/run.sh
 
-    localhost:4567/<Photo_ID_Provided_At_Upload>
+At this point a backend server IP will be provided, take note of this for usage later.
+Terminating instances once done with usage. This can be done by running
 
-or
+    sh ./aws/terminate.sh
 
-    127.0.0.1:4567/<Photo_ID_Provided_At_Upload>
+## Usage
+
+Once the binaries have been deployed to the EC2 instances and running, one can access the capabilities of our service by going to the follow web address
+
+    <ip_provided_when_running_binaries>:4567
+
+Here, users can upload images which will be automatically downloaded in a compressed file in the same image format as provided.
+Users simply must specify a compression rate - this rate indicates the percentage between {0.0, 1.0} of Fourier coefficients which are maintained in the image.
 
 ## Removal
 

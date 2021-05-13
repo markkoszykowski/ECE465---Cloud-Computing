@@ -29,4 +29,6 @@ done
 
 echo "Done." | tee -a ${LOGFILE}
 
+echo "Server running at ${INSTANCES_IPS%% *}"
+
 exit 0

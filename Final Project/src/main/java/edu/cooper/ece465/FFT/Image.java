@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
+import java.lang.Math;
 
 import edu.cooper.ece465.threading.CompressThread;
 import edu.cooper.ece465.threading.DistributionInputThread;
@@ -18,6 +19,8 @@ public class Image {
 	public BufferedImage img;
 	public int height;
 	public int width;
+	public int paddedWidth;
+	public int paddedHeight;
 	public Complex[][] red;
 	public Complex[][] green;
 	public Complex[][] blue;
@@ -26,6 +29,10 @@ public class Image {
 	public Image() {
 		this.iterativeFFT = new IterativeFFT();
 	}
+
+	public int log2(int x ) {
+		return (int)(Math.log(x) / Math.log(2));
+	}
 	
 	public void readImage(String path) throws Exception {
 		this.img = ImageIO.read(new File(path));
@@ -33,22 +40,35 @@ public class Image {
 		this.width = this.img.getWidth();
 		this.height = this.img.getHeight();
 
-		if (Integer.highestOneBit(this.width) != this.width || Integer.highestOneBit(this.height) != this.height) {
-			throw new Exception("Image much have dimensions that are a power of 2");
+		this.paddedWidth = this.width;
+		this.paddedHeight = this.height;
+
+		if (Integer.highestOneBit(this.width) != this.width) {
+			this.paddedWidth = (int) Math.pow(2, (log2(this.width) + 1));
+		}
+
+		if (Integer.highestOneBit(this.height) != this.height) {
+			this.paddedHeight = (int) Math.pow(2, (log2(this.height) + 1));
 		}
 		
-		this.red = new Complex[height][width];
-		this.green = new Complex[height][width];
-		this.blue = new Complex[height][width];
+		this.red = new Complex[this.paddedHeight][this.paddedWidth];
+		this.green = new Complex[this.paddedHeight][this.paddedWidth];
+		this.blue = new Complex[this.paddedHeight][this.paddedWidth];
 		
 		// Load pixel data into 2D arrays, one for each color
-		for (int h = 0; h < this.height; h++) {
-			for (int w = 0; w < this.width; w++) {
-				Color color = new Color(img.getRGB(w, h), true);
-//				this.red[h][w] = new Complex((color.getRed() + color.getGreen() + color.getBlue())/3, 0);
-				this.red[h][w] = new Complex(color.getRed(), 0);
-				this.green[h][w] = new Complex(color.getGreen(), 0);
-				this.blue[h][w] = new Complex(color.getBlue(), 0);
+		for (int h = 0; h < this.paddedHeight; h++) {
+			for (int w = 0; w < this.paddedWidth; w++) {
+				if (h >= this.height || w >= this.width) {
+					this.red[h][w] = new Complex(0, 0);
+					this.green[h][w] = new Complex(0, 0);
+					this.blue[h][w] = new Complex(0, 0);
+				}
+				else {
+					Color color = new Color(img.getRGB(w, h), true);
+					this.red[h][w] = new Complex(color.getRed(), 0);
+					this.green[h][w] = new Complex(color.getGreen(), 0);
+					this.blue[h][w] = new Complex(color.getBlue(), 0);
+				}
 			}
 		}
 
@@ -70,18 +90,6 @@ public class Image {
 	    }
 	    File ImageFile = new File(path);
 	    try {
-	    	
-//	    	JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
-//	    	jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-//	    	jpegParams.setCompressionQuality(0.7f);
-//	    	ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
-//	    	// specifies where the jpg image has to be written
-//	    	writer.setOutput(new FileImageOutputStream(
-//	    	  new File(path)));
-//
-//	    	// writes the file with given compression level 
-//	    	// from your JPEGImageWriteParam instance
-//	    	writer.write(null, new IIOImage(imgOut, null, null), jpegParams);
 	        ImageIO.write(imgOut, "jpg", ImageFile);
 	    } catch (IOException e) {
 	        e.printStackTrace();
@@ -94,13 +102,10 @@ public class Image {
 	 */
 	public double[][] complexToDouble(Complex[][] x) {
 		double[][] y = new double[this.height][this.width];
-		double max = 0;
+
 		for (int i = 0; i < this.height; i++) {
 			for (int j = 0; j < this.width; j++) {
 				y[i][j] = x[i][j].re();
-				if (y[i][j] > max) {
-					max = y[i][j];
-				}
 				
 				// Truncate values greater than 255 and less than 0.
 				if (y[i][j] > 255) {
@@ -111,7 +116,6 @@ public class Image {
 				}
 			}
 		}
-		System.out.println(max);
 		return y;
 	}
 	
@@ -226,7 +230,7 @@ public class Image {
 
 	private void createPoolAndOutput(Complex[][] image, ArrayList<ObjectOutputStream> oos, int numWorkers, int axis) {
 		// Cant have these all in the same loop because Red must be sent before Green which must be sent before Blue
-		ExecutorService pool = Executors.newFixedThreadPool(3);
+		ExecutorService pool = Executors.newFixedThreadPool(8);
 		for (int i = 0; i < numWorkers; i++) {
 			pool.execute(new DistributionOutputThread(image, oos.get(i), i, axis, numWorkers));
 		}
@@ -236,7 +240,7 @@ public class Image {
 
 	private void createPoolAndInput(Complex[][] image, ArrayList<ObjectInputStream> ois, int numWorkers, int axis) {
 		// Cant have all images in the same loop because Red must be received before Green which must be received before Blue
-		ExecutorService pool = Executors.newFixedThreadPool(3);
+		ExecutorService pool = Executors.newFixedThreadPool(8);
 		for (int i = 0; i < numWorkers; i++) {
 			pool.execute(new DistributionInputThread(image, ois.get(i), i, axis, numWorkers));
 		}

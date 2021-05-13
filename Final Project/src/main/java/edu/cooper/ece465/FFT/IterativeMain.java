@@ -5,7 +5,7 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class Test {
+public class IterativeMain {
 
 	public static void main(String[] args) throws IOException {
 		System.out.println("Working Directory = " + Paths.get("").toAbsolutePath());

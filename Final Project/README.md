@@ -1,6 +1,6 @@
 # Distributed Fast Fourier Transform for Image Compression
 
-Some notes on FFT and how it works... yadda yadda yadda
+The Fast Fourier Transform is a series of algorithm developed to efficiently perform Discrete Fourier Transforms (DFT). Various algorithms exist, common one's being Cooley-Tukey Radix-2, Cooley-Tukey Radix-4, Bluestein's algorithm, etc.. The FFT has various uses in signal processing, and in this case, can be applied to image compression. Image's essentially act as 2D signals, and can therefore be transformed using the FFT. Our system uses the Cooley-Tukey Radix-2 Iterative algorithm, with time complexity O(nlogn), an improvement from the DFT with time complexity O(n^2). Images can be divided up into their three color channels, and then operated on independently using the FFT. Working with a single channel, the system performs FFTs row-wise, and then column-wise, treating each row or column as its own 1D signal. A threshold is then applied to the fourier coefficients, zeroing out all coefficients below the threshold. The image can then be reconstructed with the Inverse Fast Fourier Transform (IFFT), whcih involves applying the FFT to conjugated fourier coefficients and then scaling. Once all channels have been thresholded, the image is reconstructed, containing a fraction of the information initially present.
 
 ## Example
 

@@ -26,7 +26,7 @@ At this current time, the server is only capable of serving one client at a time
 
 ## Usage
 
-Once the binaries have been deployed to the EC2 instances and running, one can access the capabilities of our service by going to the follow web address
+Once the binaries have been deployed to the EC2 instances and running, one can access the capabilities of our service by going to the following web address
 
     <ip_provided_when_running_binaries>:4567
 

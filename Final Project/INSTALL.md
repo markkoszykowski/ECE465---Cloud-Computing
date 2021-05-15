@@ -16,6 +16,6 @@ At this point a backend server IP will be provided, take note of this for usage 
 
 ## Termination
 
-Terminating instances once done with usage is highly advised. This can be done by running
+Terminating instances once done with usage is highly advised. This can be done by running the following command from the root directory
 
     sh ./aws/terminate.sh

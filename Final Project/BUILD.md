@@ -4,7 +4,7 @@ The only requisites to using this software is having valid AWS credentials, Java
 
 ## Building
 
-Prior to deploying and running the code in this repository on an AWS instance, the source code MUST be compiled on the local machine using the following command
+Prior to deploying and running the code in this repository on an AWS instance, the source code MUST be compiled on the local machine using the following command from the root directory
 
     sh ./build.sh
 
